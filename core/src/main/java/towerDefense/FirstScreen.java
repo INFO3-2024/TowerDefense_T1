@@ -1,4 +1,4 @@
-package io.github.INFO32024.TowerDefense_T1;
+package towerDefense;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
