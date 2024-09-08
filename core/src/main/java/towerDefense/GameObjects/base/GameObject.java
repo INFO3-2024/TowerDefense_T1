@@ -1,32 +1,33 @@
 package towerDefense.GameObjects.base;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 
 public abstract class GameObject {
-    protected Rectangle rect;
-    protected TextureRegion texture;
-    // protected Texture texture;
+    // protected Rectangle rect;
+    protected Texture texture;
+    protected Sprite sprite;
 
-    public GameObject(int initPosX, int initPosY, int sizeX, int sizeY, TextureRegion textureRegion) {
-        this.rect = new Rectangle();
+    public GameObject(int initPosX, int initPosY, int sizeX, int sizeY) {
+        // this.rect = new Rectangle();
 
-        rect.x = initPosX;
-        rect.y = initPosY;
-        rect.width = sizeX;
-        rect.height = sizeY;
+        // rect.x = initPosX;
+        // rect.y = initPosY;
+        // rect.width = sizeX;
+        // rect.height = sizeY;
 
-        this.texture = textureRegion;
+        texture = new Texture(Gdx.files.internal("Asset.png"));
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, rect.x, rect.y);
+        sprite.draw(batch);
     }
 
-    public void update() {
-        /* Abstract method without 'abstract' rsrs */}
+    public abstract void update(float deltaTime); // Abstract method with abstract
 
     public void dispose() {
-        /* Nothing to dispose */}
+        /* Nothing to dispose */
+    }
 }
