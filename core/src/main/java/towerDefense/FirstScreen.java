@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import towerDefense.GameObjects.base.Tower;
+import towerDefense.GameObjects.base.Wave;
 import towerDefense.GameObjects.Enemys.Enemy1;
 import towerDefense.GameObjects.Towers.TowerExample;
 import towerDefense.GameObjects.base.Enemy;
@@ -38,12 +39,16 @@ public class FirstScreen implements Screen {
     private Circle turretRangeCircle;
     private ShapeRenderer shapeRenderer;
 
+    private Wave wave;
+
     public FirstScreen() {
         batch = new SpriteBatch();
         assetManager = new AssetManager();
 
         towers = new ArrayList<Tower>();
         enemies = new ArrayList<Enemy>();
+
+        wave = new Wave();
 
         mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, 16, 16, 16);
 
@@ -173,6 +178,11 @@ public class FirstScreen implements Screen {
 
         for (Tower tower : towers) {
             tower.update(delta);
+        }
+
+        if (wave.canSpawn(delta)) {
+            enemies.add(new Enemy1(0, Gdx.graphics.getHeight() / 2, 16, 16));
+            enemies.getLast().setVelocity(50);
         }
     }
 
