@@ -125,7 +125,7 @@ public class FirstScreen implements Screen {
         Vector2 enemyPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
 
         enemies.add(new Enemy1((int) enemyPos.x, (int) enemyPos.y, 16, 16));
-        enemies.getLast().setVelocity(50);
+        enemies.get(enemies.size() - 1).setVelocity(50);
     }
 
     private void mouseMovedHandle(Vector2 pos) {
@@ -182,7 +182,7 @@ public class FirstScreen implements Screen {
 
         if (wave.canSpawn(delta)) {
             enemies.add(new Enemy1(0, Gdx.graphics.getHeight() / 2, 16, 16));
-            enemies.getLast().setVelocity(50);
+            enemies.get(enemies.size() - 1).setVelocity(50);
         }
     }
 

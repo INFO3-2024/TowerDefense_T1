@@ -22,7 +22,7 @@ Cada grupo possui 5 subequipes com 3 membros, as equipes são:
 
 ## Instalação
   1. Pré-requisitos:
-  - Java 8 ou superior
+  - Java 17 ou superior
   
   2. Clonar o repositório e abra o diretório:
   ```bash
