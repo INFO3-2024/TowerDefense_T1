@@ -1,31 +1,32 @@
 package towerDefense.GameObjects.base;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject {
-    // protected Rectangle rect;
-    protected Texture texture;
-    protected Sprite sprite;
+    protected Vector2 position;
+    protected Vector2 size;
 
-    public GameObject(int initPosX, int initPosY, int sizeX, int sizeY) {
-        // this.rect = new Rectangle();
 
-        // rect.x = initPosX;
-        // rect.y = initPosY;
-        // rect.width = sizeX;
-        // rect.height = sizeY;
-
-        texture = new Texture(Gdx.files.internal("Asset.png"));
+    public GameObject(Vector2 position, Vector2 size) {
+        this.position = position;
+        this.size = size;
     }
 
-    public void draw(SpriteBatch batch) {
-        sprite.draw(batch);
+    public void draw(TextureRegion textureRegion, SpriteBatch batch) {
+        batch.draw(textureRegion, this.position.x, this.position.y, this.size.x, this.size.y);
     }
 
-    public abstract void update(float deltaTime); // Abstract method with abstract
+    public abstract void update(float deltaTime);
+
+    public Vector2 getPosition() {
+        return this.position;
+    }
+
+    public Vector2 getSize() {
+        return this.size;
+    }
 
     public void dispose() {
         /* Nothing to dispose */

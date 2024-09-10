@@ -1,12 +1,11 @@
 package towerDefense.GameObjects.base;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public abstract class Tower extends GameObject {
-    protected Vector2 position;
     protected Enemy currenteTarget;
     protected float range;
 
@@ -20,19 +19,11 @@ public abstract class Tower extends GameObject {
     // torre pode ter duas+ balas ao mesmo tempo, pra evitar dor de cebeça no
     // futuro, utiliza-se um array
 
-    public Tower(int initPosX, int initPosY, int sizeX, int sizeY) {
-        super(initPosX, initPosY, sizeX, sizeY);
-        super.sprite = new Sprite(super.texture, 16, 0, sizeX, sizeY);
-        super.sprite.setPosition(initPosX, initPosY);
+    public Tower(Vector2 position, Vector2 size) {
+        super(position, size);
 
-        this.position = new Vector2(initPosX, initPosY);
         this.range = 5;
-
         this.bullets = new ArrayList<Bullet>();
-    }
-
-    public Vector2 getPosition() {
-        return this.position;
     }
 
     public float getRange() {
@@ -53,13 +44,12 @@ public abstract class Tower extends GameObject {
     private void shoot(float deltaTime) {
         if (bulletDelay <= timeFromLastBullet) {
             float distanceToEnemy = (float) Math.sqrt(
-                    Math.pow(currenteTarget.getPosition().x - this.position.x, 2)
-                            + Math.pow(currenteTarget.getPosition().y - this.position.y, 2));
+                    Math.pow(currenteTarget.position.x - this.position.x, 2)
+                            + Math.pow(currenteTarget.position.y - this.position.y, 2));
 
-            float angle = (float) Math.atan2(currenteTarget.getPosition().y - this.position.y,
-                    currenteTarget.getPosition().x - this.position.x);
-
-            bullets.add(new Bullet(this.position, bulletSpeed, angle, distanceToEnemy / bulletSpeed));
+            float angle = (float) Math.atan2(currenteTarget.position.y - this.position.y,
+                    currenteTarget.position.x - this.position.x);
+            bullets.add(new Bullet(new Vector2(this.position), new Vector2(this.size), bulletSpeed, angle, distanceToEnemy / bulletSpeed));
             timeFromLastBullet = 0;
         }
         timeFromLastBullet += deltaTime;
@@ -82,11 +72,10 @@ public abstract class Tower extends GameObject {
         }
     }
 
-    @Override
-    public void draw(SpriteBatch batch) {
-        super.sprite.draw(batch);
+    public void draw(TextureRegion tRegionTower, TextureRegion tRegionBullets, SpriteBatch batch) {
+        super.draw(tRegionTower, batch);
         for (Bullet bullet : bullets) {
-            bullet.draw(batch);
+            bullet.draw(tRegionBullets, batch);
         }
     }
 

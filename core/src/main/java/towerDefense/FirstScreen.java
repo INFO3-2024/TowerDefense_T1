@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.math.Vector2;
 import towerDefense.GameObjects.base.Tower;
 import towerDefense.GameObjects.base.Wave;
 import towerDefense.GameObjects.Enemys.Enemy1;
-import towerDefense.GameObjects.Towers.TowerExample;
+import towerDefense.GameObjects.Towers.Tower1;
 import towerDefense.GameObjects.base.Enemy;
 
 /**
@@ -41,6 +42,13 @@ public class FirstScreen implements Screen {
 
     private Wave wave;
 
+    Texture gameTexture;
+    TextureRegion enemyTexture;
+    TextureRegion towerTexture;
+    TextureRegion bulletTexture;
+
+    private Vector2 textureOffset;
+
     public FirstScreen() {
         batch = new SpriteBatch();
         assetManager = new AssetManager();
@@ -49,6 +57,12 @@ public class FirstScreen implements Screen {
         enemies = new ArrayList<Enemy>();
 
         wave = new Wave();
+
+        textureOffset = new Vector2(16, 16);
+        gameTexture = new Texture(Gdx.files.internal("Asset.png"));
+        enemyTexture = new TextureRegion(gameTexture, 0, 0, 16, 16);
+        towerTexture = new TextureRegion(gameTexture, 16, 0, 16, 16);
+        bulletTexture = new TextureRegion(gameTexture, 16, 16, 16, 16);
 
         mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, 16, 16, 16);
 
@@ -116,7 +130,7 @@ public class FirstScreen implements Screen {
         }
 
         if (validPos) {
-            towers.add(new TowerExample((int) turretPos.x, (int) turretPos.y, 16, 16));
+            towers.add(new Tower1(turretPos, textureOffset));
         }
     }
 
@@ -124,7 +138,7 @@ public class FirstScreen implements Screen {
         Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / 16) * 16, ((int) Gdx.input.getY() / 16) * 16);
         Vector2 enemyPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
 
-        enemies.add(new Enemy1((int) enemyPos.x, (int) enemyPos.y, 16, 16));
+        enemies.add(new Enemy1(enemyPos, textureOffset));
         enemies.get(enemies.size() - 1).setVelocity(50);
     }
 
@@ -181,7 +195,7 @@ public class FirstScreen implements Screen {
         }
 
         if (wave.canSpawn(delta)) {
-            enemies.add(new Enemy1(0, Gdx.graphics.getHeight() / 2, 16, 16));
+            enemies.add(new Enemy1(new Vector2(0, Gdx.graphics.getHeight() / 2), textureOffset));
             enemies.get(enemies.size() - 1).setVelocity(50);
         }
     }
@@ -198,7 +212,7 @@ public class FirstScreen implements Screen {
         batch.begin();
         shapeRenderer.begin(ShapeType.Line);
         for (Enemy enemy : enemies) {
-            enemy.draw(batch);
+            enemy.draw(enemyTexture, batch);
         }
 
         if (turretRangeCircle != null) {
@@ -207,7 +221,7 @@ public class FirstScreen implements Screen {
         }
 
         for (Tower tower : towers) {
-            tower.draw(batch);
+            tower.draw(towerTexture, bulletTexture, batch);
         }
 
         mousePosSprite.draw(batch);
