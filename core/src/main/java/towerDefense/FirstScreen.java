@@ -1,6 +1,7 @@
 package towerDefense;
 
 import java.util.ArrayList;
+import com.badlogic.gdx.utils.Queue;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,12 +43,14 @@ public class FirstScreen implements Screen {
 
     private Wave wave;
 
-    Texture gameTexture;
-    TextureRegion enemyTexture;
-    TextureRegion towerTexture;
-    TextureRegion bulletTexture;
+    private Texture gameTexture;
+    private TextureRegion enemyTexture;
+    private TextureRegion towerTexture;
+    private TextureRegion bulletTexture;
 
     private Vector2 textureOffset;
+
+    private Queue<Vector2> enemyWay;
 
     public FirstScreen() {
         batch = new SpriteBatch();
@@ -57,6 +60,14 @@ public class FirstScreen implements Screen {
         enemies = new ArrayList<Enemy>();
 
         wave = new Wave();
+
+        enemyWay = new Queue<Vector2>();
+
+        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() / 3), Gdx.graphics.getHeight() / 2));
+        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() / 3), Gdx.graphics.getHeight() * 2/3));
+        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() * 2/3), Gdx.graphics.getHeight() * 2/3));
+        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() / 2), Gdx.graphics.getHeight() * 2/3));
+        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth()), Gdx.graphics.getHeight() / 2));
 
         textureOffset = new Vector2(16, 16);
         gameTexture = new Texture(Gdx.files.internal("Asset.png"));
@@ -138,7 +149,7 @@ public class FirstScreen implements Screen {
         Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / 16) * 16, ((int) Gdx.input.getY() / 16) * 16);
         Vector2 enemyPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
 
-        enemies.add(new Enemy1(enemyPos, textureOffset));
+        enemies.add(new Enemy1(enemyPos, textureOffset, enemyWay));
         enemies.get(enemies.size() - 1).setVelocity(50);
     }
 
@@ -188,6 +199,10 @@ public class FirstScreen implements Screen {
             if (enemy.getLife() <= 0) {
                 enemies.remove(i);
             }
+
+            if(i ==0) {
+                System.out.println(enemy.getPosition());
+            }
         }
 
         for (Tower tower : towers) {
@@ -195,7 +210,7 @@ public class FirstScreen implements Screen {
         }
 
         if (wave.canSpawn(delta)) {
-            enemies.add(new Enemy1(new Vector2(0, Gdx.graphics.getHeight() / 2), textureOffset));
+            enemies.add(new Enemy1(new Vector2(0, Gdx.graphics.getHeight() / 2), textureOffset, enemyWay));
             enemies.get(enemies.size() - 1).setVelocity(50);
         }
     }
