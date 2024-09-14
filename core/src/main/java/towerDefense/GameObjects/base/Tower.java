@@ -49,7 +49,8 @@ public abstract class Tower extends GameObject {
 
             float angle = (float) Math.atan2(currenteTarget.position.y - this.position.y,
                     currenteTarget.position.x - this.position.x);
-            bullets.add(new Bullet(new Vector2(this.position), new Vector2(this.size), bulletSpeed, angle, distanceToEnemy / bulletSpeed));
+            bullets.add(new Bullet(new Vector2(this.position), new Vector2(this.size), bulletSpeed, angle,
+                    distanceToEnemy / bulletSpeed, currenteTarget));
             timeFromLastBullet = 0;
         }
         timeFromLastBullet += deltaTime;
@@ -64,10 +65,8 @@ public abstract class Tower extends GameObject {
             Bullet bullet = bullets.get(i);
             bullet.update(deltaTime);
             if (bullet.hit()) {
+                bullet.getBulletTarget().damage(this.damage);
                 bullets.remove(i);
-                if (currenteTarget != null) {
-                    currenteTarget.damage(this.damage);
-                }
             }
         }
     }

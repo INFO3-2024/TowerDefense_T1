@@ -215,14 +215,8 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        shapeRenderer.begin(ShapeType.Line);
         for (Enemy enemy : enemies) {
             enemy.draw(enemyTexture, batch);
-        }
-
-        if (turretRangeCircle != null) {
-            shapeRenderer.setColor(Color.WHITE);
-            shapeRenderer.circle(turretRangeCircle.x, turretRangeCircle.y, turretRangeCircle.radius);
         }
 
         for (Tower tower : towers) {
@@ -230,8 +224,18 @@ public class FirstScreen implements Screen {
         }
 
         mousePosSprite.draw(batch);
-        shapeRenderer.end();
         batch.end();
+
+        shapeRenderer.begin(ShapeType.Line);
+        if (turretRangeCircle != null) {
+            shapeRenderer.setColor(Color.WHITE);
+            shapeRenderer.circle(turretRangeCircle.x, turretRangeCircle.y, turretRangeCircle.radius);
+        }
+        shapeRenderer.end();
+
+        for (Enemy enemy : enemies) {
+            enemy.drawLifeBar(shapeRenderer);
+        }
     }
 
     @Override

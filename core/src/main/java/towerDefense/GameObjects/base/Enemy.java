@@ -1,11 +1,15 @@
 package towerDefense.GameObjects.base;
 
 import com.badlogic.gdx.utils.Queue;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy extends GameObject {
     private float velocity;
     private float life = 3.f;
+    private float maxLife = life;
     private Queue<Vector2> wayPoints;
     private boolean fullPath = false;
 
@@ -31,7 +35,8 @@ public abstract class Enemy extends GameObject {
          * - Rlx, vou fazer ser temporario
          */
 
-        if (!this.wayPoints.notEmpty()) {
+        if (this.wayPoints.isEmpty()) {
+            this.fullPath = true;
             return;
         }
 
@@ -84,6 +89,18 @@ public abstract class Enemy extends GameObject {
 
     public float getLife() {
         return this.life;
+    }
+
+    public void drawLifeBar(ShapeRenderer render) {
+        render.begin(ShapeType.Filled);
+        render.setColor(Color.BLUE);
+        render.rect(this.position.x, this.position.y - 3, this.size.x, 2);
+        render.end();
+
+        render.begin(ShapeType.Filled);
+        render.setColor(Color.YELLOW);
+        render.rect(this.position.x, this.position.y - 3, this.size.x * this.life / this.maxLife, 2);
+        render.end();
     }
 
     @Override
