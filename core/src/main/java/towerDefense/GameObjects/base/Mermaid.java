@@ -7,14 +7,14 @@ import java.util.ArrayList;
 
 public abstract class Mermaid extends GameObject {
     protected int price; // Moedas
-    protected Enemy currenteTarget;
     protected float range;
-
     protected float bulletSpeed; // Frames/Second
     protected float bulletDelay;
+
+    protected Enemy currenteTarget;
     protected float timeFromLastBullet = 9999999999.f;
     protected float damage;
-    
+
     protected ArrayList<Bullet> bullets;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
     // torre pode ter duas+ balas ao mesmo tempo, pra evitar dor de cebeça no

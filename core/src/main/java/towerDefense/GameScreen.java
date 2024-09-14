@@ -1,3 +1,7 @@
+/*
+ * Ja peço desculpa ai pela confusão de linguas nos comentarios, sla q q deu em mim
+ */
+
 package towerDefense;
 
 import java.util.ArrayList;
@@ -26,11 +30,7 @@ import towerDefense.GameObjects.Mermaids.BlueMermaid;
 import towerDefense.GameObjects.Mermaids.PinkMermaid;
 import towerDefense.GameObjects.base.Enemy;
 
-/**
- * First screen of the application. Displayed after the application is created.
- */
-public class FirstScreen implements Screen {
-
+public class GameScreen implements Screen {
     private AssetManager assetManager;
     private SpriteBatch batch;
 
@@ -53,15 +53,17 @@ public class FirstScreen implements Screen {
 
     private Queue<Vector2> enemyWay;
 
-    public FirstScreen() {
+    public GameScreen() {
+        // Gdx batch config
         batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
         assetManager = new AssetManager();
 
+        // Entities managers config
         towers = new ArrayList<Mermaid>();
         enemies = new ArrayList<Enemy>();
 
-        wave = new Wave();
-
+        // PROVISORIO - caminho dos inimigos
         enemyWay = new Queue<Vector2>();
 
         enemyWay.addFirst(new Vector2(14 * 16, Gdx.graphics.getHeight() / 2));
@@ -70,6 +72,10 @@ public class FirstScreen implements Screen {
         enemyWay.addFirst(new Vector2(28 * 16, Gdx.graphics.getHeight() / 2));
         enemyWay.addFirst(new Vector2(42 * 16, Gdx.graphics.getHeight() / 2));
 
+        // Criando a primeira wave
+        wave = new Wave(enemies, enemyWay);
+
+        // GALERINHA DO GAME ASSETS
         textureOffset = new Vector2(16, 16);
         gameTexture = new Texture(Gdx.files.internal("Asset.png"));
         enemyTexture = new TextureRegion(gameTexture, 0, 0, 16, 16);
@@ -78,7 +84,8 @@ public class FirstScreen implements Screen {
 
         mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, 16, 16, 16);
 
-        shapeRenderer = new ShapeRenderer();
+        // Processador de inputs (caramba em, acho que se não tem comentario eu não
+        // saberia o que é / autocritica)
         Gdx.input.setInputProcessor(new InputProcessor() {
             @Override
             public boolean touchDown(int x, int y, int pointer, int button) {
@@ -153,6 +160,7 @@ public class FirstScreen implements Screen {
         enemies.add(new Boss(enemyPos, textureOffset, enemyWay));
     }
 
+    // Altera a posição do sprite que segue o mouse
     private void mouseMovedHandle(Vector2 pos) {
         Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / 16) * 16, ((int) Gdx.input.getY() / 16) * 16);
         mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
@@ -176,6 +184,7 @@ public class FirstScreen implements Screen {
     public void show() {
     }
 
+    // Update game logic (function called before render)
     private void update(float delta) {
         for (Mermaid tower : towers) {
             tower.setCurrentTarget(null);
@@ -199,9 +208,7 @@ public class FirstScreen implements Screen {
             tower.update(delta);
         }
 
-        if (wave.canSpawn(delta)) {
-            enemies.add(new Boss(new Vector2(0, Gdx.graphics.getHeight() / 2), textureOffset, enemyWay));
-        }
+        wave.update(delta);
     }
 
     @Override
