@@ -4,7 +4,7 @@ package towerDefense.GameObjects.base;
 // Pensamentos aqui para o futuro, colocar isso dentro de uma classe: EnemyController/EnemyHandler
 
 public class Wave {
-    private int goldRecived = 50;
+    // private int goldRecived = 50;
     private float timeBetween = 0.500f;
     private int enemyQuantity = 5;
 

@@ -1,4 +1,4 @@
-package com.testeassets.game;
+package towerDefense;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -28,7 +28,7 @@ public class TesteAssets extends ApplicationAdapter {
         assetManager.load("assets/PinkMermaid 1.png", Texture.class);
         assetManager.load("assets/PinkMermaid-idle.png", Texture.class);
         assetManager.load("assets/041 Goldenrod City.mp3", Music.class);
-        
+
         // Espera que todos os assets sejam carregados
         assetManager.finishLoading();
 
@@ -38,16 +38,18 @@ public class TesteAssets extends ApplicationAdapter {
         pinkMermaid_idle = assetManager.get("assets/PinkMermaid-idle.png", Texture.class);
         // Animação pinkMermaid
         // Assumindo que tens 4 frames e a imagem é organizada numa linha
-        TextureRegion[][] tmpFrames_attack = TextureRegion.split(pinkMermaid_attack, pinkMermaid_attack.getWidth() / 4, pinkMermaid_attack.getHeight());
+        TextureRegion[][] tmpFrames_attack = TextureRegion.split(pinkMermaid_attack, pinkMermaid_attack.getWidth() / 4,
+                pinkMermaid_attack.getHeight());
         TextureRegion[] pinkFrames_attack = new TextureRegion[4];
-        
-        TextureRegion[][] tmpFrames_idle = TextureRegion.split(pinkMermaid_idle, pinkMermaid_idle.getWidth() / 4, pinkMermaid_idle.getHeight());
+
+        TextureRegion[][] tmpFrames_idle = TextureRegion.split(pinkMermaid_idle, pinkMermaid_idle.getWidth() / 4,
+                pinkMermaid_idle.getHeight());
         TextureRegion[] pinkFrames_idle = new TextureRegion[4];
 
         // Copiar os frames para o array de animação
         for (int i = 0; i < 4; i++) {
             pinkFrames_attack[i] = tmpFrames_attack[0][i];
-            
+
             pinkFrames_idle[i] = tmpFrames_idle[0][i]; // Assumindo que todos os frames estão na primeira linha
         }
 
@@ -55,8 +57,6 @@ public class TesteAssets extends ApplicationAdapter {
         pinkAnimation_attack = new Animation<>(0.15f, pinkFrames_attack);
         pinkAnimation_idle = new Animation<>(0.17f, pinkFrames_idle);
         stateTime = 0f;
-
-
 
         // Música de fundo
         musica = assetManager.get("assets/041 Goldenrod City.mp3", Music.class);

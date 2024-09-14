@@ -63,11 +63,11 @@ public class FirstScreen implements Screen {
 
         enemyWay = new Queue<Vector2>();
 
-        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() / 3), Gdx.graphics.getHeight() / 2));
-        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() / 3), Gdx.graphics.getHeight() * 2/3));
-        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() * 2/3), Gdx.graphics.getHeight() * 2/3));
-        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth() / 2), Gdx.graphics.getHeight() * 2/3));
-        enemyWay.addFirst(new Vector2((Gdx.graphics.getWidth()), Gdx.graphics.getHeight() / 2));
+        enemyWay.addFirst(new Vector2(14 * 16, Gdx.graphics.getHeight() / 2));
+        enemyWay.addFirst(new Vector2(14 * 16, Gdx.graphics.getHeight() * 2 / 3));
+        enemyWay.addFirst(new Vector2(28 * 16, Gdx.graphics.getHeight() * 2 / 3));
+        enemyWay.addFirst(new Vector2(28 * 16, Gdx.graphics.getHeight() / 2));
+        enemyWay.addFirst(new Vector2(42 * 16, Gdx.graphics.getHeight() / 2));
 
         textureOffset = new Vector2(16, 16);
         gameTexture = new Texture(Gdx.files.internal("Asset.png"));
@@ -176,12 +176,6 @@ public class FirstScreen implements Screen {
     public void show() {
     }
 
-    // ESSA FUNÇÃO TAVA AQUI SIMPLISMENTE EXISTINDO, NÃO FAZIA NADA KAKAKAKAKAKA
-    // Vou deixar pq alguem devia querer usar, se ninguem upar codio aq antes da
-    // sprint acabar, excluir
-    public void create() {
-    }
-
     private void update(float delta) {
         for (Tower tower : towers) {
             tower.setCurrentTarget(null);
@@ -198,10 +192,6 @@ public class FirstScreen implements Screen {
             enemy.update(delta);
             if (enemy.getLife() <= 0) {
                 enemies.remove(i);
-            }
-
-            if(i ==0) {
-                System.out.println(enemy.getPosition());
             }
         }
 

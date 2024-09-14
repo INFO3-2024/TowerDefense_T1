@@ -1,14 +1,13 @@
 package towerDefense.GameObjects.base;
 
 import com.badlogic.gdx.utils.Queue;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy extends GameObject {
     private float velocity;
     private float life = 3.f;
     private Queue<Vector2> wayPoints;
+    private boolean fullPath = false;
 
     public Enemy(Vector2 position, Vector2 size, Queue<Vector2> wayPoints) {
         super(position, size);
@@ -25,34 +24,49 @@ public abstract class Enemy extends GameObject {
         }
     }
 
-    private void move(float deltaTime) { // OK, HÁ UMA SÉRIE DE PROBLEMAS AQUI, TAMBÉM ME DÓI, JURO QUE ISSO É TEMPORÁRIO (OU NÃO RSRS
-        if(!this.wayPoints.notEmpty()){
+    private void move(float deltaTime) {
+        /*
+         * OK, HÁ UMA SÉRIE DE PROBLEMAS AQUI, TAMBÉM ME DÓI, JURO QUE ISSO É
+         * TEMPORÁRIO (OU NÃO RSRS
+         * - Rlx, vou fazer ser temporario
+         */
+
+        if (!this.wayPoints.notEmpty()) {
             return;
         }
 
-        if (this.position.x < this.wayPoints.first().x) {
-            this.position.x += 1;/*(int)(this.velocity * deltaTime);*/
-        } else if (this.position.x > this.wayPoints.first().x) {
-            this.position.x -= 1;/*(int)(this.velocity * deltaTime);*/
-        }
+        Vector2 nextVector = this.wayPoints.first();
+        Vector2 diffToNextVector = new Vector2(nextVector.x - this.position.x, nextVector.y - this.position.y);
+        // Essa biblioteca é tão util que não tem a m3rd4 de uma sobrecarga de operador
+        // pra somar vetor. OBRIGADO LIBGDX
 
-        if (this.position.y < this.wayPoints.first().y) {
-            this.position.y += 1;/*(int)(this.velocity * deltaTime);*/
-        } else if (this.position.y > this.wayPoints.first().y) {
-            this.position.y -= 1;/*(int)(this.velocity * deltaTime);*/
-        }
+        this.position.x += this.velocity * deltaTime * Math.signum(diffToNextVector.x);
+        this.position.y += this.velocity * deltaTime * Math.signum(diffToNextVector.y);
 
-        if(this.position.equals(this.wayPoints.first())) {
+        if (Math.signum(diffToNextVector.x) * this.position.x > Math.signum(diffToNextVector.x) * nextVector.x) {
+            float leftOverDistance = Math.abs(this.position.x - nextVector.x);
+            this.position.x = nextVector.x;
             this.wayPoints.removeFirst();
+            if (this.wayPoints.isEmpty()) {
+                this.fullPath = true;
+                return;
+            }
+            this.position.y += Math.signum(this.wayPoints.first().y - this.position.y) * leftOverDistance;
         }
 
-        // QUANTO IF KK
+        if (Math.signum(diffToNextVector.y) * this.position.y > Math.signum(diffToNextVector.y) * nextVector.y) {
+            float leftOverDistance = Math.abs(this.position.y - nextVector.y);
+            this.position.y = nextVector.y;
+            this.wayPoints.removeFirst();
+            if (this.wayPoints.isEmpty()) {
+                this.fullPath = true;
+                return;
+            }
+            this.position.x += Math.signum(this.wayPoints.first().x - this.position.x) * leftOverDistance;
+        }
 
-        // A partir daqui, codigo provisorio, remover o quanto antes :)
-        if (this.position.x >= Gdx.graphics.getWidth()) {
-            this.position.x = 0;
-        } else if (this.position.y >= Gdx.graphics.getWidth()) {
-            this.position.y = 500;
+        if (this.position.equals(this.wayPoints.first())) {
+            this.wayPoints.removeFirst();
         }
     }
 

@@ -8,7 +8,6 @@ public abstract class GameObject {
     protected Vector2 position;
     protected Vector2 size;
 
-
     public GameObject(Vector2 position, Vector2 size) {
         this.position = position;
         this.size = size;
