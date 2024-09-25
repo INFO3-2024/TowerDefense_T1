@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy extends GameObject {
-    private float velocity;
-    private float life = 3.f;
-    private float maxLife = life;
-    private Queue<Vector2> wayPoints;
-    private boolean fullPath = false;
+    protected float velocity;
+    protected float life;
+    protected float maxLife;
+    protected Queue<Vector2> wayPoints;
+    protected boolean fullPath = false;
 
     public Enemy(Vector2 position, Vector2 size, Queue<Vector2> wayPoints) {
         super(position, size);

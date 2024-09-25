@@ -5,24 +5,24 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
-public abstract class Tower extends GameObject {
+public abstract class Mermaid extends GameObject {
+    protected int price; // Moedas
     protected Enemy currenteTarget;
     protected float range;
 
     protected float bulletSpeed; // Frames/Second
     protected float bulletDelay;
     protected float timeFromLastBullet = 9999999999.f;
+    protected float damage;
+    
     protected ArrayList<Bullet> bullets;
-
-    protected float damage = 1.f;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
     // torre pode ter duas+ balas ao mesmo tempo, pra evitar dor de cebeça no
     // futuro, utiliza-se um array
 
-    public Tower(Vector2 position, Vector2 size) {
+    public Mermaid(Vector2 position, Vector2 size) {
         super(position, size);
-
-        this.range = 5;
+        this.bulletSpeed = 250.f;
         this.bullets = new ArrayList<Bullet>();
     }
 

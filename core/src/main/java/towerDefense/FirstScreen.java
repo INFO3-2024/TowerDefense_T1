@@ -19,10 +19,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
-import towerDefense.GameObjects.base.Tower;
+import towerDefense.GameObjects.base.Mermaid;
 import towerDefense.GameObjects.base.Wave;
-import towerDefense.GameObjects.Enemys.Enemy1;
-import towerDefense.GameObjects.Towers.Tower1;
+import towerDefense.GameObjects.Enemys.Boss;
+import towerDefense.GameObjects.Mermaids.BlueMermaid;
+import towerDefense.GameObjects.Mermaids.PinkMermaid;
 import towerDefense.GameObjects.base.Enemy;
 
 /**
@@ -33,7 +34,7 @@ public class FirstScreen implements Screen {
     private AssetManager assetManager;
     private SpriteBatch batch;
 
-    private ArrayList<Tower> towers;
+    private ArrayList<Mermaid> towers;
     private ArrayList<Enemy> enemies;
 
     private Sprite mousePosSprite;
@@ -56,7 +57,7 @@ public class FirstScreen implements Screen {
         batch = new SpriteBatch();
         assetManager = new AssetManager();
 
-        towers = new ArrayList<Tower>();
+        towers = new ArrayList<Mermaid>();
         enemies = new ArrayList<Enemy>();
 
         wave = new Wave();
@@ -132,7 +133,7 @@ public class FirstScreen implements Screen {
         Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
         boolean validPos = true;
 
-        for (Tower tower : towers) {
+        for (Mermaid tower : towers) {
             // Comparação de Vector2 não funciona. Obrigado LIBGdx :thumbsup:
             if (tower.getPosition().x == turretPos.x && tower.getPosition().y == turretPos.y) {
                 validPos = false;
@@ -141,7 +142,7 @@ public class FirstScreen implements Screen {
         }
 
         if (validPos) {
-            towers.add(new Tower1(turretPos, textureOffset));
+            towers.add(new BlueMermaid(turretPos, textureOffset));
         }
     }
 
@@ -149,8 +150,7 @@ public class FirstScreen implements Screen {
         Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / 16) * 16, ((int) Gdx.input.getY() / 16) * 16);
         Vector2 enemyPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
 
-        enemies.add(new Enemy1(enemyPos, textureOffset, enemyWay));
-        enemies.get(enemies.size() - 1).setVelocity(50);
+        enemies.add(new Boss(enemyPos, textureOffset, enemyWay));
     }
 
     private void mouseMovedHandle(Vector2 pos) {
@@ -160,7 +160,7 @@ public class FirstScreen implements Screen {
         this.turretRangeCircle = null; // As funções providas pela classe string não rodam direito pra limpar a
                                        // variavel, tem que limpar ela aqui mesmo
 
-        for (Tower tower : towers) {
+        for (Mermaid tower : towers) {
             // D qm foi a ideia de girigo de colocar a posição do mouse e do sprite
             // diferente, em LIBGDX?????
             // Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
@@ -177,7 +177,7 @@ public class FirstScreen implements Screen {
     }
 
     private void update(float delta) {
-        for (Tower tower : towers) {
+        for (Mermaid tower : towers) {
             tower.setCurrentTarget(null);
             for (Enemy enemy : enemies) { // Responsavel por pegar o primeiro inimigo gerado
                 if (tower.inRange(enemy.getPosition())) {
@@ -195,13 +195,12 @@ public class FirstScreen implements Screen {
             }
         }
 
-        for (Tower tower : towers) {
+        for (Mermaid tower : towers) {
             tower.update(delta);
         }
 
         if (wave.canSpawn(delta)) {
-            enemies.add(new Enemy1(new Vector2(0, Gdx.graphics.getHeight() / 2), textureOffset, enemyWay));
-            enemies.get(enemies.size() - 1).setVelocity(50);
+            enemies.add(new Boss(new Vector2(0, Gdx.graphics.getHeight() / 2), textureOffset, enemyWay));
         }
     }
 
@@ -219,7 +218,7 @@ public class FirstScreen implements Screen {
             enemy.draw(enemyTexture, batch);
         }
 
-        for (Tower tower : towers) {
+        for (Mermaid tower : towers) {
             tower.draw(towerTexture, bulletTexture, batch);
         }
 
