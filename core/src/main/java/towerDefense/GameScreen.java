@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.Vector2;
 import towerDefense.GameObjects.base.Mermaid;
 import towerDefense.GameObjects.base.Wave;
 import towerDefense.GameObjects.Enemys.Boss;
+import towerDefense.GameObjects.Interface.BuildMenu;
 import towerDefense.GameObjects.Mermaids.BlueMermaid;
 import towerDefense.GameObjects.Mermaids.PinkMermaid;
 import towerDefense.GameObjects.base.Enemy;
@@ -52,6 +53,8 @@ public class GameScreen implements Screen {
     private Vector2 textureOffset;
 
     private Queue<Vector2> enemyWay;
+
+    private BuildMenu buildMode;
 
     public GameScreen() {
         // Gdx batch config
@@ -140,6 +143,17 @@ public class GameScreen implements Screen {
         Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
         boolean validPos = true;
 
+        if (buildMode != null) {
+            Mermaid mermaid = buildMode.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y));
+
+            if (mermaid != null) {
+                towers.add(mermaid);
+            }
+            mousePosSprite.setPosition(turretPos.x, turretPos.y);
+            buildMode = null;
+            return;
+        }
+
         for (Mermaid tower : towers) {
             // Comparação de Vector2 não funciona. Obrigado LIBGdx :thumbsup:
             if (tower.getPosition().x == turretPos.x && tower.getPosition().y == turretPos.y) {
@@ -149,7 +163,7 @@ public class GameScreen implements Screen {
         }
 
         if (validPos) {
-            towers.add(new BlueMermaid(turretPos, textureOffset));
+            buildMode = new BuildMenu(turretPos);
         }
     }
 
@@ -165,7 +179,11 @@ public class GameScreen implements Screen {
         Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / 16) * 16, ((int) Gdx.input.getY() / 16) * 16);
         mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - 16);
 
-        this.turretRangeCircle = null; // As funções providas pela classe string não rodam direito pra limpar a
+        if (buildMode != null) {
+            mousePosSprite.setPosition(buildMode.getTowerPos().x, buildMode.getTowerPos().y);
+        }
+
+        this.turretRangeCircle = null; // As funções providas pela classe screen não rodam direito pra limpar a
                                        // variavel, tem que limpar ela aqui mesmo
 
         for (Mermaid tower : towers) {
@@ -241,6 +259,10 @@ public class GameScreen implements Screen {
 
         for (Enemy enemy : enemies) {
             enemy.drawLifeBar(shapeRenderer);
+        }
+
+        if (buildMode != null) {
+            buildMode.draw(shapeRenderer);
         }
     }
 
