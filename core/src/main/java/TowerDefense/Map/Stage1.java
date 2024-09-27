@@ -220,7 +220,7 @@ public class Stage1 extends Stage {
 				}
 				paths.add(path);
 			}
-
+			in.close();
 		} catch (Exception e) {
 			System.out.println("ERRO IN : " + e.getMessage());
 		}
