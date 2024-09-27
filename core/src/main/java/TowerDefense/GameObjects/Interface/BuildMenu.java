@@ -1,4 +1,4 @@
-package io.github.INFO32024.TowerDefense_T1.GameObjects.Interface;
+package TowerDefense.GameObjects.Interface;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Mermaids.BlueMermaid;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Mermaids.GreenMermaid;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Mermaids.PinkMermaid;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Mermaids.PurpleMermaid;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Mermaids.RedMermaid;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.Mermaids.BlueMermaid;
+import TowerDefense.GameObjects.Mermaids.GreenMermaid;
+import TowerDefense.GameObjects.Mermaids.PinkMermaid;
+import TowerDefense.GameObjects.Mermaids.PurpleMermaid;
+import TowerDefense.GameObjects.Mermaids.RedMermaid;
+import TowerDefense.GameObjects.base.Mermaid;
 
 public class BuildMenu {
     private Vector2 turrretPos;
@@ -19,7 +19,7 @@ public class BuildMenu {
     private Rectangle towerRect;
     private int textureOffset;
 
-    public BuildMenu(Vector2 turretPos,int textureOffset) {
+    public BuildMenu(Vector2 turretPos, int textureOffset) {
         this.turrretPos = turretPos;
         this.backgroundRect = new Rectangle(turretPos.x - 56, turretPos.y + 16, 128, 32);
         this.towerRect = new Rectangle(backgroundRect.x + 8, backgroundRect.y + 8, 16, 16);
@@ -33,7 +33,8 @@ public class BuildMenu {
     public Mermaid handleClick(Vector2 mousePos) {
         int mermaidNumber = 99;
         for (int i = 0; i < 5; i++) {
-            if (mousePos.x >= towerRect.x + i * (textureOffset + textureOffset / 2) && mousePos.x < towerRect.x + i * (textureOffset + textureOffset / 2) + textureOffset
+            if (mousePos.x >= towerRect.x + i * (textureOffset + textureOffset / 2)
+                    && mousePos.x < towerRect.x + i * (textureOffset + textureOffset / 2) + textureOffset
                     && mousePos.y >= towerRect.y
                     && mousePos.y <= towerRect.y + textureOffset) {
                 mermaidNumber = i;

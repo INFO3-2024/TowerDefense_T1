@@ -1,9 +1,9 @@
-package io.github.INFO32024.TowerDefense_T1.GameObjects.Enemys;
+package TowerDefense.GameObjects.Enemys;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
-import io.github.INFO32024.TowerDefense_T1.GameObjects.base.Enemy;
+import TowerDefense.GameObjects.base.Enemy;
 
 public class Pirate extends Enemy {
 

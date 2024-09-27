@@ -1,4 +1,4 @@
-package io.github.INFO32024.TowerDefense_T1.GameObjects.base;
+package TowerDefense.GameObjects.base;
 
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.graphics.Color;
@@ -104,7 +104,7 @@ public abstract class Enemy extends GameObject {
         render.end();
     }
 
-    public int dropCoins(){
+    public int dropCoins() {
         return this.dropedCoins;
     }
 

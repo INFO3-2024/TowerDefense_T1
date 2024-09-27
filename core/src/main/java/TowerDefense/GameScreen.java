@@ -1,8 +1,8 @@
-package io.github.INFO32024.TowerDefense_T1;
+package TowerDefense;
 
 import com.badlogic.gdx.Screen;
 
-import io.github.INFO32024.TowerDefense_T1.Map.Stage1;
+import TowerDefense.Map.Stage1;
 
 public class GameScreen implements Screen {
 	private Stage1 stage;
@@ -29,14 +29,18 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
-	public void show() {}
+	public void show() {
+	}
 
 	@Override
-	public void pause() {}
+	public void pause() {
+	}
 
 	@Override
-	public void resume() {}
+	public void resume() {
+	}
 
 	@Override
-	public void hide() {}
+	public void hide() {
+	}
 }

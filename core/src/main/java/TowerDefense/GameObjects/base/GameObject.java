@@ -1,4 +1,4 @@
-package io.github.INFO32024.TowerDefense_T1.GameObjects.base;
+package TowerDefense.GameObjects.base;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

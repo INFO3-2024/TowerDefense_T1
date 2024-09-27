@@ -1,4 +1,4 @@
-package io.github.INFO32024.TowerDefense_T1.Map;
+package TowerDefense.Map;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,11 +18,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Queue;
 
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Enemys.Pirate;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Interface.BuildMenu;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.base.Enemy;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.base.Mermaid;
-import io.github.INFO32024.TowerDefense_T1.GameObjects.base.Wave;
+import TowerDefense.GameObjects.Enemys.Pirate;
+import TowerDefense.GameObjects.Interface.BuildMenu;
+import TowerDefense.GameObjects.base.Enemy;
+import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.Wave;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -136,37 +136,38 @@ public class Stage1 extends Stage {
 	}
 
 	private void onLeftMouseDown(Vector2 pos) {
-		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset, ((int) Gdx.input.getY() / textureOffset) * textureOffset);
-        Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
-        boolean validPos = true;
+		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
+				((int) Gdx.input.getY() / textureOffset) * textureOffset);
+		Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
+		boolean validPos = true;
 
-        if (buildMode != null) {
-            Mermaid mermaid = buildMode.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y));
-			
+		if (buildMode != null) {
+			Mermaid mermaid = buildMode.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y));
+
 			// Observem esse mecanismo de compra super sofistiacado
-			if(this.playerCoins > mermaid.getPrice()) {
+			if (this.playerCoins > mermaid.getPrice()) {
 				this.playerCoins -= mermaid.getPrice();
 				if (mermaid != null) {
 					towers.add(mermaid);
 				}
 			}
 
-            mousePosSprite.setPosition(turretPos.x, turretPos.y);
-            buildMode = null;
-            return;
-        }
+			mousePosSprite.setPosition(turretPos.x, turretPos.y);
+			buildMode = null;
+			return;
+		}
 
-        for (Mermaid tower : towers) {
-            // Comparação de Vector2 não funciona. Obrigado LIBGdx :thumbsup:
-            if (tower.getPosition().x == turretPos.x && tower.getPosition().y == turretPos.y) {
-                validPos = false;
-                break;
-            }
-        }
+		for (Mermaid tower : towers) {
+			// Comparação de Vector2 não funciona. Obrigado LIBGdx :thumbsup:
+			if (tower.getPosition().x == turretPos.x && tower.getPosition().y == turretPos.y) {
+				validPos = false;
+				break;
+			}
+		}
 
-        if (validPos) {
-            buildMode = new BuildMenu(turretPos, textureOffset);
-        }
+		if (validPos) {
+			buildMode = new BuildMenu(turretPos, textureOffset);
+		}
 	}
 
 	private void onRightMouseDown(Vector2 pos) {
@@ -181,34 +182,36 @@ public class Stage1 extends Stage {
 	}
 
 	private void mouseMovedHandle(Vector2 pos) {
-		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset, ((int) Gdx.input.getY() / textureOffset) * textureOffset);
-        mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
+		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
+				((int) Gdx.input.getY() / textureOffset) * textureOffset);
+		mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
-        if (buildMode != null) {
-            mousePosSprite.setPosition(buildMode.getTowerPos().x, buildMode.getTowerPos().y);
-        }
+		if (buildMode != null) {
+			mousePosSprite.setPosition(buildMode.getTowerPos().x, buildMode.getTowerPos().y);
+		}
 
-        this.turretRangeCircle = null; // As funções providas pela classe screen não rodam direito pra limpar a
-                                       // variavel, tem que limpar ela aqui mesmo
+		this.turretRangeCircle = null; // As funções providas pela classe screen não rodam direito pra limpar a
+										// variavel, tem que limpar ela aqui mesmo
 
-        for (Mermaid tower : towers) {
-            // D qm foi a ideia de girigo de colocar a posição do mouse e do sprite
-            // diferente, em LIBGDX?????
-            // Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
-            if (mousePos.x == tower.getPosition().x
-                    && Gdx.graphics.getHeight() - mousePos.y - textureOffset == tower.getPosition().y) {
-                this.turretRangeCircle = new Circle(mousePos.x + 8, Gdx.graphics.getHeight() - mousePos.y - 8,
-                        tower.getRange() * textureOffset);
-            }
-        }
+		for (Mermaid tower : towers) {
+			// D qm foi a ideia de girigo de colocar a posição do mouse e do sprite
+			// diferente, em LIBGDX?????
+			// Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
+			if (mousePos.x == tower.getPosition().x
+					&& Gdx.graphics.getHeight() - mousePos.y - textureOffset == tower.getPosition().y) {
+				this.turretRangeCircle = new Circle(mousePos.x + 8, Gdx.graphics.getHeight() - mousePos.y - 8,
+						tower.getRange() * textureOffset);
+			}
+		}
 	}
 
 	public ArrayList<Queue<Vector2>> getPositionsMap() {
 		ArrayList<Queue<Vector2>> paths = new ArrayList<Queue<Vector2>>();
 
 		try {
+			System.out.println("Diretorio atual: " + new java.io.File(".").getAbsolutePath());
 			ArrayList<String> lines = new ArrayList<String>();
-			FileReader file = new FileReader("../lwjgl3/coords/map3.ws");
+			FileReader file = new FileReader("./lwjgl3/coords/map1.ws");
 			BufferedReader in = new BufferedReader(file);
 			String lineFile = in.readLine();
 
@@ -257,11 +260,11 @@ public class Stage1 extends Stage {
 			for (Enemy enemy : enemies) {
 				enemy.draw(enemyTexture, batch);
 			}
-			
+
 			for (Mermaid tower : towers) {
 				tower.draw(towerTexture, bulletTexture, batch);
 			}
-			
+
 			mousePosSprite.draw(batch);
 		}
 		batch.end();
@@ -274,11 +277,11 @@ public class Stage1 extends Stage {
 			}
 		}
 		shapeRenderer.end();
-		
+
 		for (Enemy enemy : enemies) {
 			enemy.drawLifeBar(shapeRenderer);
 		}
-		
+
 		if (buildMode != null) {
 			buildMode.draw(shapeRenderer);
 		}
@@ -287,7 +290,6 @@ public class Stage1 extends Stage {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		update();
 
 		for (Mermaid tower : towers) {
 			tower.setCurrentTarget(null);
@@ -306,10 +308,6 @@ public class Stage1 extends Stage {
 				playerCoins += enemy.dropCoins();
 				enemies.remove(i);
 			}
-
-			if (i == 0) {
-
-			}
 		}
 
 		for (Mermaid tower : towers) {
@@ -326,6 +324,6 @@ public class Stage1 extends Stage {
 		coinsFont.dispose();
 	}
 
-	public void update() {}
-	public void resize(int height, int width) {}
+	public void resize(int height, int width) {
+	}
 }

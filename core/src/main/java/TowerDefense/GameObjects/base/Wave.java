@@ -1,4 +1,4 @@
-package io.github.INFO32024.TowerDefense_T1.GameObjects.base;
+package TowerDefense.GameObjects.base;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
-import io.github.INFO32024.TowerDefense_T1.GameObjects.Enemys.Pirate;
+import TowerDefense.GameObjects.Enemys.Pirate;
 
 public class Wave {
     private float timeBetween = 0.500f;
@@ -26,7 +26,8 @@ public class Wave {
         if (timeBetween <= timeSinceLastSpawn && enemyQuantity > 0) {
             enemyQuantity--;
             timeSinceLastSpawn = 0;
-            enimiesArray.add(new Pirate(new Vector2(-textureOffset, Gdx.graphics.getHeight() / 2), new Vector2(textureOffset, textureOffset), enemyWay.get(path)));
+            enimiesArray.add(new Pirate(new Vector2(-textureOffset, Gdx.graphics.getHeight() / 2),
+                    new Vector2(textureOffset, textureOffset), enemyWay.get(path)));
         }
         timeSinceLastSpawn += deltaTime;
     }
