@@ -11,37 +11,28 @@ import TowerDefense.GameObjects.Mermaids.GreenMermaid;
 import TowerDefense.GameObjects.Mermaids.PinkMermaid;
 import TowerDefense.GameObjects.Mermaids.PurpleMermaid;
 import TowerDefense.GameObjects.Mermaids.RedMermaid;
+import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
 
-public class BuildMenu {
+public class BuildMenu implements InterfaceMenu {
     private Vector2 turrretPos;
     private Rectangle backgroundRect;
     private Rectangle towerRect;
-    private int textureOffset;
 
-    public BuildMenu(Vector2 turretPos, int textureOffset) {
+    private int textureOffset;
+    private int mermaidNumber = 99;
+
+    public BuildMenu(Vector2 turretPos) {
         this.turrretPos = turretPos;
         this.backgroundRect = new Rectangle(turretPos.x - 56, turretPos.y + 16, 128, 32);
         this.towerRect = new Rectangle(backgroundRect.x + 8, backgroundRect.y + 8, 16, 16);
-        this.textureOffset = textureOffset;
     }
 
     public Vector2 getTowerPos() {
         return this.turrretPos;
     }
 
-    public Mermaid handleClick(Vector2 mousePos) {
-        int mermaidNumber = 99;
-        for (int i = 0; i < 5; i++) {
-            if (mousePos.x >= towerRect.x + i * (textureOffset + textureOffset / 2)
-                    && mousePos.x < towerRect.x + i * (textureOffset + textureOffset / 2) + textureOffset
-                    && mousePos.y >= towerRect.y
-                    && mousePos.y <= towerRect.y + textureOffset) {
-                mermaidNumber = i;
-                break;
-            }
-        }
-
+    public Mermaid getMermaid() {
         switch (mermaidNumber) {
             case 0:
                 return new PinkMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
@@ -56,7 +47,18 @@ public class BuildMenu {
             default:
                 return null;
         }
+    }
 
+    public boolean handleClick(Vector2 mousePos) {
+        for (int i = 0; i < 5; i++) {
+            if (mousePos.x >= towerRect.x + i * (16 + 8) && mousePos.x < towerRect.x + i * (16 + 8) + 16
+                    && mousePos.y >= towerRect.y
+                    && mousePos.y <= towerRect.y + 16) {
+                mermaidNumber = i;
+                return true;
+            }
+        }
+        return false;
     }
 
     public void draw(ShapeRenderer render) {

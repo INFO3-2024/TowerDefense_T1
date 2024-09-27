@@ -15,6 +15,12 @@ public abstract class Mermaid extends GameObject {
     protected float timeFromLastBullet = 9999999999.f;
     protected float damage;
 
+    protected int rangeUpgrade = 0;
+    protected int damageUpgrade = 0;
+    protected int bulletDelayUpgrade = 0;
+    protected int bulletSpeedUpgrade = 0;
+    protected int level = 1;
+
     protected ArrayList<Bullet> bullets;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
     // torre pode ter duas+ balas ao mesmo tempo, pra evitar dor de cebeça no
@@ -85,5 +91,65 @@ public abstract class Mermaid extends GameObject {
     @Override
     public void dispose() {
         /* Nothing to dipose also */
+    }
+
+    // Upgrade functions
+    public int getDamageUpgradePrice() {
+        return (this.damageUpgrade + 1) * 3;
+    }
+
+    public int getRangeUpgradePrice() {
+        return (this.rangeUpgrade + 1) * 1;
+    }
+
+    public int getBulletDelayUpgradePrice() {
+        return (this.bulletDelayUpgrade + 1) * 2;
+    }
+
+    public int getBulletSpeedUpgradePrice() {
+
+        return (this.bulletSpeedUpgrade + 1) * 2;
+    }
+
+    public int getLevelUpPrice() {
+        return this.level * 50;
+    }
+
+    public void upgradeDamage() {
+        this.damageUpgrade++;
+        this.damage = this.damage * 1.1f;
+    }
+
+    public void upgradeRange() {
+        this.rangeUpgrade++;
+        this.range = this.range * 1.5f;
+    }
+
+    public void upgradeBulletDelay() {
+        this.bulletDelayUpgrade++;
+        this.bulletDelay = this.bulletDelay * 0.9f;
+    }
+
+    public void upgradeBulletSpeed() {
+        this.bulletSpeedUpgrade++;
+        this.bulletSpeed = this.bulletSpeed * 1.2f;
+    }
+
+    public void levelUp() {
+        float damageMultiplier = (float) Math.pow(1.1f, this.damageUpgrade);
+        float onlyDamage = damage / damageMultiplier;
+        this.damage = onlyDamage * 1.5f * damageMultiplier;
+
+        float rangeMultiplier = (float) Math.pow(1.5f, this.rangeUpgrade);
+        float onlyRange = range / rangeMultiplier;
+        this.range = onlyRange * 1.25f * rangeMultiplier;
+
+        float bulletSpeeedMultiplier = (float) Math.pow(1.2f, this.bulletSpeedUpgrade);
+        float onlyBulletSpeed = bulletSpeed / bulletSpeeedMultiplier;
+        this.bulletSpeed = onlyBulletSpeed * 1.25f * bulletSpeeedMultiplier;
+
+        float bulletDelayMultiplier = (float) Math.pow(0.9f, this.bulletDelayUpgrade);
+        float onlyBulletDelay = bulletDelay / bulletDelayMultiplier;
+        this.bulletDelay = onlyBulletDelay * 0.75f * bulletDelayMultiplier;
     }
 }
