@@ -82,6 +82,8 @@ public abstract class Mermaid extends GameObject {
     }
 
     public void draw(TextureRegion tRegionTower, TextureRegion tRegionBullets, SpriteBatch batch) {
+        System.out.println("É, entrando tá.");
+
         super.draw(tRegionTower, batch);
         for (Bullet bullet : bullets) {
             bullet.draw(tRegionBullets, batch);
@@ -151,5 +153,9 @@ public abstract class Mermaid extends GameObject {
         float bulletDelayMultiplier = (float) Math.pow(0.9f, this.bulletDelayUpgrade);
         float onlyBulletDelay = bulletDelay / bulletDelayMultiplier;
         this.bulletDelay = onlyBulletDelay * 0.75f * bulletDelayMultiplier;
+    }
+
+    public ArrayList<Bullet> getBullets(){
+        return this.bullets;
     }
 }

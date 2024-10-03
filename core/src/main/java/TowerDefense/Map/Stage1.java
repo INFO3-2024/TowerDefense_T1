@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Queue;
 
 import TowerDefense.GameObjects.Interface.BuildMenu;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
+import TowerDefense.GameObjects.base.Bullet;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
@@ -202,7 +203,7 @@ public class Stage1 extends Stage {
 		try {
 			System.out.println("Diretorio atual: " + new java.io.File(".").getAbsolutePath());
 			ArrayList<String> lines = new ArrayList<String>();
-			FileReader file = new FileReader("./lwjgl3/coords/map1.ws");
+			FileReader file = new FileReader("../lwjgl3/coords/map1.ws");
 			BufferedReader in = new BufferedReader(file);
 			String lineFile = in.readLine();
 
@@ -277,16 +278,29 @@ public class Stage1 extends Stage {
 
 		batch.draw(this.getBackground(), 0, 0);
 
+		font.draw(batch, "Coins: " + coins, 10, 20);
+		mousePosSprite.draw(batch);
+
+		for (Mermaid tower : towers) {
+			/* 	EXATO A BOSTA DA SEREIA TEM UM AFUNÇÃO PARA ISSSO E ESTAVA FUNCIONAND
+			 *  POR ALGUM MOTIVO PAROU DE FUNCIONAR APÓS UM MERGE (POR ISSO ODEIO MERGE)
+			 *  AGORA VAI FICAR ASSIM, TO NEM AÍ
+			 *  ESSE CODIGO É IGUAL EU, É FEIO, MAS FUNCIONA
+			 */
+
+			//tower.draw(enemyTexture, batch);
+			batch.draw(towerTexture, tower.getPosition().x, tower.getPosition().y);
+			
+			for (Bullet bullet : tower.getBullets()) {
+				//bullet.draw(bulletTexture, batch);
+
+				batch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
+			}
+		}
+
 		for (Enemy enemy : enemies) {
 			enemy.draw(enemyTexture, batch);
 		}
-
-		for (Mermaid tower : towers) {
-			tower.draw(towerTexture, bulletTexture, batch);
-		}
-
-		font.draw(batch, "Coins: " + coins, 10, 20);
-		mousePosSprite.draw(batch);
 
 		batch.end();
 
