@@ -1,11 +1,16 @@
 package TowerDefense;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import TowerDefense.Map.Stage1;
+import TowerDefense.Stages.base.GameStage;
+import TowerDefense.Stages.Stage1;
+import TowerDefense.Stages.Stage2;
+import TowerDefense.Stages.Stage3;
+
 
 public class GameScreen implements Screen {
-	private Stage1 stage;
+	private Stage stage;
 
 	public GameScreen() {
 		stage = new Stage1();
@@ -19,7 +24,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.resize(height, width);
+		((GameStage)stage).resize(height, width);
 		stage.act();
 	}
 

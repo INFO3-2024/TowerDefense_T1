@@ -45,7 +45,7 @@ public abstract class Mermaid extends GameObject {
     }
 
     public boolean inRange(Vector2 pos) {
-        if (Math.pow(range * 16, 2) >= Math.pow(pos.x - this.position.x, 2) + Math.pow(pos.y - this.position.y, 2)) {
+        if (Math.pow(range * 64, 2) >= Math.pow(pos.x - this.position.x, 2) + Math.pow(pos.y - this.position.y, 2)) {
             return true;
         }
         return false;
@@ -79,11 +79,11 @@ public abstract class Mermaid extends GameObject {
                 bullets.remove(i);
             }
         }
+
+        //System.out.println(this.position.x + ", " + this.position.y);
     }
 
     public void draw(TextureRegion tRegionTower, TextureRegion tRegionBullets, SpriteBatch batch) {
-        System.out.println("É, entrando tá.");
-
         super.draw(tRegionTower, batch);
         for (Bullet bullet : bullets) {
             bullet.draw(tRegionBullets, batch);

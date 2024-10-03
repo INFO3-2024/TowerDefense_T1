@@ -7,8 +7,8 @@ import TowerDefense.GameObjects.base.Enemy;
 
 public class Boss extends Enemy {
 
-    public Boss(Vector2 position, Vector2 size, Queue<Vector2> wayPoints) {
-        super(position, size, wayPoints);
+    public Boss(Vector2 size, Queue<Vector2> wayPoints) {
+        super(size, wayPoints);
         super.dropedCoins = 30;
         super.velocity = 20.f;
         super.life = 9.f;

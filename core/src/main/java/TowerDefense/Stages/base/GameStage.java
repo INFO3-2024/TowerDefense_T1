@@ -1,4 +1,4 @@
-package TowerDefense.Map;
+package TowerDefense.Stages.base;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,55 +21,54 @@ import TowerDefense.GameObjects.Interface.BuildMenu;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Bullet;
 import TowerDefense.GameObjects.base.Enemy;
+import TowerDefense.GameObjects.base.GameObject;
 import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
 import TowerDefense.GameObjects.base.Wave;
+import TowerDefense.Map.Map;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-public class Stage1 extends Stage {
-	private ArrayList<Queue<Vector2>> listPaths;
-	private Texture background;
+public class GameStage extends Stage {
+	protected Map mapGame;
+	protected SpriteBatch batch;
+	protected BitmapFont font;
 
-	private SpriteBatch batch;
-	private BitmapFont font;
+	protected ArrayList<Mermaid> towers;
+	protected ArrayList<Enemy> enemies;
 
-	private ArrayList<Mermaid> towers;
-	private ArrayList<Enemy> enemies;
+	protected Sprite mousePosSprite;
 
-	private Sprite mousePosSprite;
+	protected Circle turretRangeCircle;
+	protected ShapeRenderer shapeRenderer;
 
-	private Circle turretRangeCircle;
-	private ShapeRenderer shapeRenderer;
+	protected Wave wave;
 
-	private Wave wave;
+	protected Texture gameTexture;
+	protected TextureRegion enemyTexture;
+	protected TextureRegion towerTexture;
+	protected TextureRegion bulletTexture;
 
-	private Texture gameTexture;
-	private TextureRegion enemyTexture;
-	private TextureRegion towerTexture;
-	private TextureRegion bulletTexture;
+	protected int textureOffset;
 
-	private int textureOffset;
+	protected InterfaceMenu buildMode;
 
-	private InterfaceMenu buildMode;
+	protected int coins = 999;
 
-	private int coins = 999;
+	public GameStage(int stage) {
+		mapGame = new Map(stage);
 
-	public Stage1() {
-		listPaths = getPositionsMap();
-		background = new Texture(Gdx.files.internal("Map3.jpg"));
-
-		batch = new SpriteBatch();
+		batch = mapGame.getBatch();
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
 
 		towers = new ArrayList<Mermaid>();
 		enemies = new ArrayList<Enemy>();
 
-		wave = new Wave(enemies, listPaths);
+		wave = new Wave(enemies, mapGame.getListPaths());
 
 		textureOffset = 64;
 		gameTexture = new Texture(Gdx.files.internal("Asset.png"));
@@ -129,7 +128,7 @@ public class Stage1 extends Stage {
 		});
 	}
 
-	private void onLeftMouseDown(Vector2 pos) {
+	protected void onLeftMouseDown(Vector2 pos) {
 		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 		Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
@@ -144,6 +143,8 @@ public class Stage1 extends Stage {
 				if (mermaid != null && mermaid.getPrice() <= this.coins) {
 					this.coins -= mermaid.getPrice();
 					towers.add(mermaid);
+
+					System.out.println("mermaid:" + ((GameObject)mermaid).getPosition().x + ", " + ((GameObject)mermaid).getPosition().y);
 				}
 			}
 
@@ -169,11 +170,11 @@ public class Stage1 extends Stage {
 		buildMode = new BuildMenu(turretPos);
 	}
 
-	private void onRightMouseDown(Vector2 pos) {
+	protected void onRightMouseDown(Vector2 pos) {
 		System.out.println("CLICOU DIREITO EM");
 	}
 
-	private void mouseMovedHandle(Vector2 pos) {
+	protected void mouseMovedHandle(Vector2 pos) {
 		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 		mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
@@ -191,50 +192,10 @@ public class Stage1 extends Stage {
 			// Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
 			if (mousePos.x == tower.getPosition().x
 					&& Gdx.graphics.getHeight() - mousePos.y - textureOffset == tower.getPosition().y) {
-				this.turretRangeCircle = new Circle(mousePos.x + 8, Gdx.graphics.getHeight() - mousePos.y - 8,
-						tower.getRange() * 16);
+				this.turretRangeCircle = new Circle(mousePos.x + textureOffset / 2, Gdx.graphics.getHeight() - mousePos.y - 8,
+						tower.getRange() * textureOffset);
 			}
 		}
-	}
-
-	public ArrayList<Queue<Vector2>> getPositionsMap() {
-		ArrayList<Queue<Vector2>> paths = new ArrayList<Queue<Vector2>>();
-
-		try {
-			System.out.println("Diretorio atual: " + new java.io.File(".").getAbsolutePath());
-			ArrayList<String> lines = new ArrayList<String>();
-			FileReader file = new FileReader("../lwjgl3/coords/map1.ws");
-			BufferedReader in = new BufferedReader(file);
-			String lineFile = in.readLine();
-
-			while (lineFile != null) {
-				lines.add(lineFile);
-				lineFile = in.readLine();
-			}
-
-			for (String line : lines) {
-				Queue<Vector2> path = new Queue<Vector2>();
-				String coords[] = line.split(";");
-				for (String coord : coords) {
-					path.addLast(
-							new Vector2(Float.parseFloat(coord.split(",")[0]), Float.parseFloat(coord.split(",")[1])));
-				}
-				paths.add(path);
-			}
-			in.close();
-		} catch (Exception e) {
-			System.out.println("ERRO IN : " + e.getMessage());
-		}
-
-		return paths;
-	}
-
-	public ArrayList<Queue<Vector2>> getListPaths() {
-		return listPaths;
-	}
-
-	public Texture getBackground() {
-		return background;
 	}
 
 	@Override
@@ -264,7 +225,7 @@ public class Stage1 extends Stage {
 			tower.update(delta);
 		}
 
-		wave.update(delta, textureOffset, 0);
+		wave.update(delta, textureOffset);
 	}
 
 	@Override
@@ -276,7 +237,7 @@ public class Stage1 extends Stage {
 
 		batch.begin();
 
-		batch.draw(this.getBackground(), 0, 0);
+		mapGame.draw();
 
 		font.draw(batch, "Coins: " + coins, 10, 20);
 		mousePosSprite.draw(batch);
@@ -326,6 +287,14 @@ public class Stage1 extends Stage {
 		font.dispose();
 	}
 
-	public void resize(int height, int width) {
+	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI, AGRADECIDO
+	public void resize(int height, int width) { /* pass */}
+
+	public Map getMapGame() {
+		return mapGame;
+	}
+	
+	public void setMapGame(Map mapGame) {
+		this.mapGame = mapGame;
 	}
 }

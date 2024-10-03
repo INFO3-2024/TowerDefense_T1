@@ -14,8 +14,8 @@ public abstract class Enemy extends GameObject {
     protected boolean fullPath = false;
     protected int dropedCoins;
 
-    public Enemy(Vector2 position, Vector2 size, Queue<Vector2> wayPoints) {
-        super(position, size);
+    public Enemy(Vector2 size, Queue<Vector2> wayPoints) {
+        super(new Vector2(wayPoints.first().x, wayPoints.first().y), size);
 
         this.wayPoints = new Queue<Vector2>();
         this.setWayPoints(wayPoints);
@@ -41,7 +41,7 @@ public abstract class Enemy extends GameObject {
             return;
         }
 
-        Vector2 nextVector = this.wayPoints.first();
+        Vector2 nextVector = this.wayPoints.last();
         Vector2 diffToNextVector = new Vector2(nextVector.x - this.position.x, nextVector.y - this.position.y);
         // Essa biblioteca é tão util que não tem a m3rd4 de uma sobrecarga de operador
         // pra somar vetor. OBRIGADO LIBGDX
@@ -52,27 +52,26 @@ public abstract class Enemy extends GameObject {
         if (Math.signum(diffToNextVector.x) * this.position.x > Math.signum(diffToNextVector.x) * nextVector.x) {
             float leftOverDistance = Math.abs(this.position.x - nextVector.x);
             this.position.x = nextVector.x;
-            this.wayPoints.removeFirst();
             if (this.wayPoints.isEmpty()) {
                 this.fullPath = true;
                 return;
             }
-            this.position.y += Math.signum(this.wayPoints.first().y - this.position.y) * leftOverDistance;
+            this.position.y += Math.signum(this.wayPoints.last().y - this.position.y) * leftOverDistance;
+            
         }
 
         if (Math.signum(diffToNextVector.y) * this.position.y > Math.signum(diffToNextVector.y) * nextVector.y) {
             float leftOverDistance = Math.abs(this.position.y - nextVector.y);
             this.position.y = nextVector.y;
-            this.wayPoints.removeFirst();
             if (this.wayPoints.isEmpty()) {
                 this.fullPath = true;
                 return;
             }
-            this.position.x += Math.signum(this.wayPoints.first().x - this.position.x) * leftOverDistance;
+            this.position.x += Math.signum(this.wayPoints.last().x - this.position.x) * leftOverDistance;
         }
 
-        if (this.position.equals(this.wayPoints.first())) {
-            this.wayPoints.removeFirst();
+        if (this.position.equals(this.wayPoints.last())) {
+            this.wayPoints.removeLast();
         }
     }
 
