@@ -1,7 +1,5 @@
 package TowerDefense.Stages.base;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -15,11 +13,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Queue;
 
+import TowerDefense.AssetsManager.AssetsControl;
 import TowerDefense.GameObjects.Interface.BuildMenu;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
-import TowerDefense.GameObjects.base.Bullet;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.GameObject;
 import TowerDefense.GameObjects.base.InterfaceMenu;
@@ -34,6 +31,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class GameStage extends Stage {
 	protected Map mapGame;
+	protected AssetsControl assetsManager;
 	protected SpriteBatch batch;
 	protected BitmapFont font;
 
@@ -48,8 +46,6 @@ public class GameStage extends Stage {
 	protected Wave wave;
 
 	protected Texture gameTexture;
-	protected TextureRegion enemyTexture;
-	protected TextureRegion towerTexture;
 	protected TextureRegion bulletTexture;
 
 	protected int textureOffset;
@@ -65,6 +61,9 @@ public class GameStage extends Stage {
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
 
+		assetsManager = new AssetsControl();
+		assetsManager.create();
+
 		towers = new ArrayList<Mermaid>();
 		enemies = new ArrayList<Enemy>();
 
@@ -72,8 +71,6 @@ public class GameStage extends Stage {
 
 		textureOffset = 64;
 		gameTexture = new Texture(Gdx.files.internal("Asset.png"));
-		enemyTexture = new TextureRegion(gameTexture, 0, 0, textureOffset, textureOffset);
-		towerTexture = new TextureRegion(gameTexture, textureOffset, 0, textureOffset, textureOffset);
 		bulletTexture = new TextureRegion(gameTexture, textureOffset, textureOffset, textureOffset, textureOffset);
 
 		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, textureOffset, textureOffset,
@@ -167,7 +164,7 @@ public class GameStage extends Stage {
 			}
 		}
 		// Clique em espaço livre
-		buildMode = new BuildMenu(turretPos);
+		buildMode = new BuildMenu(turretPos, textureOffset);
 	}
 
 	protected void onRightMouseDown(Vector2 pos) {
@@ -226,6 +223,8 @@ public class GameStage extends Stage {
 		}
 
 		wave.update(delta, textureOffset);
+
+		assetsManager.update(delta);
 	}
 
 	@Override
@@ -236,33 +235,22 @@ public class GameStage extends Stage {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
+		{
+			mapGame.draw();
 
-		mapGame.draw();
+			font.draw(batch, "Coins: " + coins, 10, 20);
+			mousePosSprite.draw(batch);
 
-		font.draw(batch, "Coins: " + coins, 10, 20);
-		mousePosSprite.draw(batch);
-
-		for (Mermaid tower : towers) {
-			/* 	EXATO A BOSTA DA SEREIA TEM UM AFUNÇÃO PARA ISSSO E ESTAVA FUNCIONAND
-			 *  POR ALGUM MOTIVO PAROU DE FUNCIONAR APÓS UM MERGE (POR ISSO ODEIO MERGE)
-			 *  AGORA VAI FICAR ASSIM, TO NEM AÍ
-			 *  ESSE CODIGO É IGUAL EU, É FEIO, MAS FUNCIONA
-			 */
-
-			//tower.draw(enemyTexture, batch);
-			batch.draw(towerTexture, tower.getPosition().x, tower.getPosition().y);
-			
-			for (Bullet bullet : tower.getBullets()) {
-				//bullet.draw(bulletTexture, batch);
-
-				batch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
+			for (Mermaid tower : towers) {
+				tower.draw(bulletTexture, batch);
 			}
-		}
 
-		for (Enemy enemy : enemies) {
-			enemy.draw(enemyTexture, batch);
-		}
+			for (Enemy enemy : enemies) {
+				enemy.draw(batch);
+			}
 
+			assetsManager.render();
+		}
 		batch.end();
 
 		shapeRenderer.begin(ShapeType.Line);

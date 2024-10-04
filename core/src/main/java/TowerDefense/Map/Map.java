@@ -30,12 +30,12 @@ public class Map {
 		try {
 		ArrayList<String> lines = new ArrayList<String>();
 		FileReader file = new FileReader("../lwjgl3/coords/map" + stage + ".coord");
-		BufferedReader in = new BufferedReader(file);
-		String lineFile = in.readLine();
+		BufferedReader buffer = new BufferedReader(file);
+		String lineFile = buffer.readLine();
 		
 		while(lineFile != null) {
 			lines.add(lineFile);
-			lineFile = in.readLine();
+			lineFile = buffer.readLine();
 		}
 		
         for (String line : lines) {
@@ -44,9 +44,6 @@ public class Map {
         	for(String coord : coords) {
         		path.addLast(new Vector2(Float.parseFloat(coord.split(",")[0]), Float.parseFloat(coord.split(",")[1])));
         	}
-			for(Vector2 a : path){
-				//System.out.println(a.x + ", " + a.y);
-			}
 			
         	paths.add(path);
         }

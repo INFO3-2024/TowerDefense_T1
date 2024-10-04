@@ -3,6 +3,9 @@ package TowerDefense.GameObjects.base;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+
+import TowerDefense.AssetsManager.AssetsControl;
+
 import java.util.ArrayList;
 
 public abstract class Mermaid extends GameObject {
@@ -20,6 +23,8 @@ public abstract class Mermaid extends GameObject {
     protected int bulletDelayUpgrade = 0;
     protected int bulletSpeedUpgrade = 0;
     protected int level = 1;
+
+    int mermaidUpdate = 0; // Usado para pegar a textura certa
 
     protected ArrayList<Bullet> bullets;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
@@ -68,9 +73,21 @@ public abstract class Mermaid extends GameObject {
 
     @Override
     public void update(float deltaTime) {
+        super.update(deltaTime);
+        
         if (currenteTarget != null) {
             shoot(deltaTime);
+
         }
+
+        if(currenteTarget != null && mermaidUpdate % 2 == 0) {
+            mermaidUpdate += 1;
+            this.animation = AssetsControl.getAnimation(textureRegions, mermaidUpdate, 0.15f);
+        } else if(currenteTarget == null && mermaidUpdate % 2 == 1) {
+            mermaidUpdate -= 1;
+            this.animation = AssetsControl.getAnimation(textureRegions, mermaidUpdate, 0.15f);
+        }
+
         for (int i = 0; i < bullets.size(); i++) {
             Bullet bullet = bullets.get(i);
             bullet.update(deltaTime);
@@ -79,21 +96,18 @@ public abstract class Mermaid extends GameObject {
                 bullets.remove(i);
             }
         }
-
-        //System.out.println(this.position.x + ", " + this.position.y);
     }
 
-    public void draw(TextureRegion tRegionTower, TextureRegion tRegionBullets, SpriteBatch batch) {
-        super.draw(tRegionTower, batch);
+    public void draw(TextureRegion tRegionBullets, SpriteBatch batch) {
+        super.draw(batch);
+
         for (Bullet bullet : bullets) {
-            bullet.draw(tRegionBullets, batch);
+            bullet.currentTRegion = tRegionBullets;
+            bullet.draw(batch);
         }
     }
 
-    @Override
-    public void dispose() {
-        /* Nothing to dipose also */
-    }
+    
 
     // Upgrade functions
     public int getDamageUpgradePrice() {
@@ -138,6 +152,10 @@ public abstract class Mermaid extends GameObject {
     }
 
     public void levelUp() {
+        if(this.mermaidUpdate >= 4  ) {
+            return;
+        }
+
         float damageMultiplier = (float) Math.pow(1.1f, this.damageUpgrade);
         float onlyDamage = damage / damageMultiplier;
         this.damage = onlyDamage * 1.5f * damageMultiplier;
@@ -153,9 +171,20 @@ public abstract class Mermaid extends GameObject {
         float bulletDelayMultiplier = (float) Math.pow(0.9f, this.bulletDelayUpgrade);
         float onlyBulletDelay = bulletDelay / bulletDelayMultiplier;
         this.bulletDelay = onlyBulletDelay * 0.75f * bulletDelayMultiplier;
+
+        // Sim, cada nivel que ela aumenta tem que aumentar 2 aqui 
+        // se eu fiz assim é pq é assim.
+        this.mermaidUpdate += 2;
+        this.animation = AssetsControl.getAnimation(textureRegions, mermaidUpdate, 0.15f);
+
     }
 
     public ArrayList<Bullet> getBullets(){
         return this.bullets;
+    }
+    
+    @Override
+    public void dispose() {
+        /* Nothing to dipose also */
     }
 }

@@ -22,8 +22,9 @@ public class BuildMenu implements InterfaceMenu {
     private int textureOffset;
     private int mermaidNumber = 99;
 
-    public BuildMenu(Vector2 turretPos) {
+    public BuildMenu(Vector2 turretPos, int textureOffset) {
         this.turrretPos = turretPos;
+        this.textureOffset = textureOffset;
         this.backgroundRect = new Rectangle(turretPos.x - 56, turretPos.y + 16, 128, 32);
         this.towerRect = new Rectangle(backgroundRect.x + 8, backgroundRect.y + 8, 16, 16);
     }

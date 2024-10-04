@@ -2,6 +2,7 @@ package TowerDefense.GameObjects.base;
 
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -75,6 +76,11 @@ public abstract class Enemy extends GameObject {
         }
     }
 
+    @Override
+    public void draw(SpriteBatch batch) {
+        batch.draw(currentTRegion, this.position.x - 17, this.position.y - 14, (int)(this.size.x * 1.45), (int)(this.size.y * 1.45));
+    }
+
     public float getVelocity() {
         return this.velocity;
     }
@@ -109,6 +115,7 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void update(float deltaTime) {
+        super.update(deltaTime);
         this.move(deltaTime);
     }
 

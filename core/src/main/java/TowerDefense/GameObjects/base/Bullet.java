@@ -35,8 +35,6 @@ public class Bullet extends GameObject {
         this.position.y += Math.sin(this.angle) * bulletSpeed * deltaTime;
         this.position.x += Math.cos(this.angle) * bulletSpeed * deltaTime;
 
-        // this.sprite.setPosition(this.position.x, this.position.y);
-
         this.timeAlive += deltaTime;
 
         if (timeAlive >= timeUntilImpact) {

@@ -3,6 +3,7 @@ package TowerDefense.GameObjects.Enemys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
+import TowerDefense.AssetsManager.AssetsControl;
 import TowerDefense.GameObjects.base.Enemy;
 
 public class Boss extends Enemy {
@@ -13,6 +14,10 @@ public class Boss extends Enemy {
         super.velocity = 20.f;
         super.life = 9.f;
         super.maxLife = super.life;
+
+        textureRegions = AssetsControl.getTextureRegions("basicEnemy");
+        animation = AssetsControl.getAnimation(textureRegions, 3, 0.15f);
+        this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
     }
 
 }
