@@ -58,6 +58,37 @@ public class Map {
 	public void draw() {
 		batch.draw(this.getBackground(), 0, 0);
 	}
+
+	public boolean isPointOnPath(Vector2 point) {
+		for(Queue<Vector2> path : listPaths) {
+			for(int i = 0; i < path.size - 1; i++){
+				if(
+					isPointOnPath(point, path.get(i), path.get(i + 1)) ||
+					isPointOnPath(invertPoint(point), invertPoint(path.get(i)), invertPoint(path.get(i + 1)))
+				){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isPointOnPath(Vector2 point, Vector2 currentCoord, Vector2 nextCoord){
+		if(
+			(point.x == currentCoord.x && point.x == nextCoord.x) &&
+			((point.y <= currentCoord.y && point.y >= nextCoord.y) ||
+			(point.y >= currentCoord.y && point.y <= nextCoord.y))
+		){
+			return true;
+		}
+		
+		return false;
+	}
+
+	private Vector2 invertPoint(Vector2 point) {
+		return new Vector2(point.y, point.x);
+	}
 	
 	public ArrayList<Queue<Vector2>> getListPaths() {
 		return this.listPaths;

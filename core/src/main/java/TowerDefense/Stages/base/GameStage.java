@@ -1,6 +1,7 @@
 package TowerDefense.Stages.base;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Queue;
 
 import TowerDefense.AssetsManager.AssetsControl;
 import TowerDefense.GameObjects.Interface.BuildMenu;
@@ -130,6 +132,10 @@ public class GameStage extends Stage {
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 		Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
+		if(mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
+			return;
+		}
+
 		// Caso de interface aberta
 		if (buildMode != null) {
 			buildMode.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y));
@@ -140,8 +146,6 @@ public class GameStage extends Stage {
 				if (mermaid != null && mermaid.getPrice() <= this.coins) {
 					this.coins -= mermaid.getPrice();
 					towers.add(mermaid);
-
-					System.out.println("mermaid:" + ((GameObject)mermaid).getPosition().x + ", " + ((GameObject)mermaid).getPosition().y);
 				}
 			}
 
@@ -152,6 +156,7 @@ public class GameStage extends Stage {
 
 			mousePosSprite.setPosition(turretPos.x, turretPos.y);
 			buildMode = null;
+
 			return;
 		}
 
@@ -174,6 +179,12 @@ public class GameStage extends Stage {
 	protected void mouseMovedHandle(Vector2 pos) {
 		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
+				
+		if(mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
+			mousePosSprite.setPosition(-textureOffset, -textureOffset);
+			return;
+		}
+
 		mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
 		if (buildMode != null) {
@@ -252,6 +263,16 @@ public class GameStage extends Stage {
 			assetsManager.render();
 		}
 		batch.end();
+
+		/*for(int i = 0; i <= 1024; i += 64){
+			for(int j = 0; j <= 704; j += 64){
+				if(mapGame.isPointOnPath(new Vector2(i, j))){
+					batch.begin();
+						batch.draw(bulletTexture, i, j);
+					batch.end();
+				}
+			}
+		}*/
 
 		shapeRenderer.begin(ShapeType.Line);
 		if (turretRangeCircle != null) {
