@@ -18,13 +18,10 @@ public abstract class Mermaid extends GameObject {
     protected float timeFromLastBullet = 9999999999.f;
     protected float damage;
 
-    protected int rangeUpgrade = 0;
-    protected int damageUpgrade = 0;
-    protected int bulletDelayUpgrade = 0;
-    protected int bulletSpeedUpgrade = 0;
     protected int level = 1;
-
-    int mermaidUpdate = 0; // Usado para pegar a textura certa
+    protected int[] upgrades = {0, 0, 0};
+    protected int mermaidType = 0; // Usado para pegar a textura certa
+    protected int sumUpgrades = 0;
 
     protected ArrayList<Bullet> bullets;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
@@ -80,12 +77,12 @@ public abstract class Mermaid extends GameObject {
 
         }
 
-        if(currenteTarget != null && mermaidUpdate % 2 == 0) {
-            mermaidUpdate += 1;
-            this.animation = AssetsControl.getAnimation(textureRegions, mermaidUpdate, 0.15f);
-        } else if(currenteTarget == null && mermaidUpdate % 2 == 1) {
-            mermaidUpdate -= 1;
-            this.animation = AssetsControl.getAnimation(textureRegions, mermaidUpdate, 0.15f);
+        if(currenteTarget != null && mermaidType % 2 == 0) {
+            mermaidType += 1;
+            this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
+        } else if(currenteTarget == null && mermaidType % 2 == 1) {
+            mermaidType -= 1;
+            this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
         }
 
         for (int i = 0; i < bullets.size(); i++) {
@@ -107,76 +104,77 @@ public abstract class Mermaid extends GameObject {
         }
     }
 
-    
-
     // Upgrade functions
     public int getDamageUpgradePrice() {
-        return (this.damageUpgrade + 1) * 3;
+        return (this.upgrades[2] + 1) * 3;
     }
 
     public int getRangeUpgradePrice() {
-        return (this.rangeUpgrade + 1) * 1;
-    }
-
-    public int getBulletDelayUpgradePrice() {
-        return (this.bulletDelayUpgrade + 1) * 2;
+        return (this.upgrades[1] + 1) * 1;
     }
 
     public int getBulletSpeedUpgradePrice() {
 
-        return (this.bulletSpeedUpgrade + 1) * 2;
+        return (this.upgrades[0] + 1) * 2;
     }
 
-    public int getLevelUpPrice() {
-        return this.level * 50;
-    }
+    public boolean upgradeDamage() {
+        if(sumUpgrades >= 9 || level >= 3) 
+            return false;
 
-    public void upgradeDamage() {
-        this.damageUpgrade++;
+        this.upgrades[2]++;
+        this.sumUpgrades++;
         this.damage = this.damage * 1.1f;
+
+        levelUp();
+
+        return true;
     }
 
-    public void upgradeRange() {
-        this.rangeUpgrade++;
+    public boolean upgradeRange() {
+        if(sumUpgrades >= 9 || level >= 3) 
+            return false;
+
+        this.upgrades[1]++;
+        this.sumUpgrades++;
         this.range = this.range * 1.5f;
+
+        levelUp();
+        return true;
     }
 
-    public void upgradeBulletDelay() {
-        this.bulletDelayUpgrade++;
-        this.bulletDelay = this.bulletDelay * 0.9f;
-    }
+    public boolean upgradeBulletSpeed() {
+        if(sumUpgrades >= 9 || level >= 3) 
+            return false;
 
-    public void upgradeBulletSpeed() {
-        this.bulletSpeedUpgrade++;
+        this.upgrades[0]++;
+        this.sumUpgrades++;
         this.bulletSpeed = this.bulletSpeed * 1.2f;
+
+        this.bulletDelay = this.bulletDelay * 0.9f;
+
+        levelUp();
+
+        return true;
     }
 
-    public void levelUp() {
-        if(this.mermaidUpdate >= 4  ) {
+    public int getUpdates(int i) {
+        return this.upgrades[i];
+    }
+
+    private void levelUp() {
+        if(sumUpgrades < this.level * 3 ){
             return;
         }
 
-        float damageMultiplier = (float) Math.pow(1.1f, this.damageUpgrade);
-        float onlyDamage = damage / damageMultiplier;
-        this.damage = onlyDamage * 1.5f * damageMultiplier;
-
-        float rangeMultiplier = (float) Math.pow(1.5f, this.rangeUpgrade);
-        float onlyRange = range / rangeMultiplier;
-        this.range = onlyRange * 1.25f * rangeMultiplier;
-
-        float bulletSpeeedMultiplier = (float) Math.pow(1.2f, this.bulletSpeedUpgrade);
-        float onlyBulletSpeed = bulletSpeed / bulletSpeeedMultiplier;
-        this.bulletSpeed = onlyBulletSpeed * 1.25f * bulletSpeeedMultiplier;
-
-        float bulletDelayMultiplier = (float) Math.pow(0.9f, this.bulletDelayUpgrade);
-        float onlyBulletDelay = bulletDelay / bulletDelayMultiplier;
-        this.bulletDelay = onlyBulletDelay * 0.75f * bulletDelayMultiplier;
-
         // Sim, cada nivel que ela aumenta tem que aumentar 2 aqui 
         // se eu fiz assim é pq é assim.
-        this.mermaidUpdate += 2;
-        this.animation = AssetsControl.getAnimation(textureRegions, mermaidUpdate, 0.15f);
+        
+        System.out.println("entrou");
 
+        this.level += 1;
+        this.mermaidType += 2;
+        this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f); 
     }
 
     public ArrayList<Bullet> getBullets(){

@@ -132,7 +132,7 @@ public class GameStage extends Stage {
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 		Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
-		if(mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
+		if(buildMode == null && mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
 			return;
 		}
 
@@ -180,7 +180,7 @@ public class GameStage extends Stage {
 		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 				
-		if(mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
+		if(buildMode == null && mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
 			mousePosSprite.setPosition(-textureOffset, -textureOffset);
 			return;
 		}
@@ -188,6 +188,8 @@ public class GameStage extends Stage {
 		mousePosSprite.setPosition(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
 		if (buildMode != null) {
+			buildMode.handleMouseOver(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y));
+
 			mousePosSprite.setPosition(buildMode.getTowerPos().x, buildMode.getTowerPos().y);
 		}
 
@@ -249,7 +251,7 @@ public class GameStage extends Stage {
 		{
 			mapGame.draw();
 
-			font.draw(batch, "Coins: " + coins, 10, 20);
+			font.draw(batch, "Coins: " + coins, 10, Gdx.graphics.getHeight() - 20);
 			mousePosSprite.draw(batch);
 
 			for (Mermaid tower : towers) {
@@ -261,18 +263,12 @@ public class GameStage extends Stage {
 			}
 
 			assetsManager.render();
+
+			if (buildMode != null) {
+				buildMode.draw(batch);
+			}
 		}
 		batch.end();
-
-		/*for(int i = 0; i <= 1024; i += 64){
-			for(int j = 0; j <= 704; j += 64){
-				if(mapGame.isPointOnPath(new Vector2(i, j))){
-					batch.begin();
-						batch.draw(bulletTexture, i, j);
-					batch.end();
-				}
-			}
-		}*/
 
 		shapeRenderer.begin(ShapeType.Line);
 		if (turretRangeCircle != null) {
@@ -284,19 +280,9 @@ public class GameStage extends Stage {
 		for (Enemy enemy : enemies) {
 			enemy.drawLifeBar(shapeRenderer);
 		}
-
-		if (buildMode != null) {
-			buildMode.draw(shapeRenderer);
-		}
 	}
 
-	@Override
-	public void dispose() {
-		batch.dispose();
-		font.dispose();
-	}
-
-	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI, AGRADECIDO
+	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI? AGRADECIDO
 	public void resize(int height, int width) { /* pass */}
 
 	public Map getMapGame() {
@@ -305,5 +291,11 @@ public class GameStage extends Stage {
 	
 	public void setMapGame(Map mapGame) {
 		this.mapGame = mapGame;
+	}
+	
+	@Override
+	public void dispose() {
+		batch.dispose();
+		font.dispose();
 	}
 }

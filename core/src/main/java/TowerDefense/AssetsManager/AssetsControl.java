@@ -31,6 +31,9 @@ public class AssetsControl extends ApplicationAdapter {
 
         assetManager.load("Enemies/BasicEnemy.png", Texture.class);
 
+        assetManager.load("Menus/UpgradeMenu.png", Texture.class);
+        assetManager.load("Menus/BuildMenu.png", Texture.class);
+
         assetManager.load("Sound/Goldenrod-City.mp3", Music.class);
 
         // Espera que todos os assets sejam carregados
@@ -43,6 +46,8 @@ public class AssetsControl extends ApplicationAdapter {
         textures.put("greenMermaid", assetManager.get("Mermaids/GreenMermaid.png", Texture.class));
         textures.put("blueMermaid", assetManager.get("Mermaids/BlueMermaid.png", Texture.class));
         textures.put("basicEnemy", assetManager.get("Enemies/BasicEnemy.png", Texture.class));
+        textures.put("upgradeMenu", assetManager.get("Menus/UpgradeMenu.png", Texture.class));
+        textures.put("buildMenu", assetManager.get("Menus/BuildMenu.png", Texture.class));
 
         stateTime = 0f;
 
@@ -56,6 +61,10 @@ public class AssetsControl extends ApplicationAdapter {
     public void update(float deltaTime) {
         // Atualiza o tempo de animação
         stateTime += deltaTime;
+    }
+
+    public static Texture getTexture(String key) {
+        return textures.get(key);
     }
 
     public static TextureRegion[][] getTextureRegions(String key) {

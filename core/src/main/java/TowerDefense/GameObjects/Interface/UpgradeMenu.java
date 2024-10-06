@@ -1,87 +1,147 @@
 package TowerDefense.GameObjects.Interface;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
+import java.util.ArrayList;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.GameObjects.base.GameObject;
 import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
 
-public class UpgradeMenu implements InterfaceMenu {
+public class UpgradeMenu extends GameObject implements InterfaceMenu {
     private Mermaid turret;
-    private Rectangle backgroundRect;
-    private Rectangle towerRect;
 
-    private int mermaidUpdate = 99;
+    private int mermaidUpdate, lastOver = -1;
+
+    TextureRegion buttonsTRegion;
+
+    ArrayList<TextureRegion> splitedBtnsTRegion, buttonsNormal, buttonsOver, numbersFont;
 
     public UpgradeMenu(Mermaid turrent) {
+        super(new Vector2(turrent.getPosition().x + 64, turrent.getPosition().y), new Vector2(48, 32));
         this.turret = turrent;
-        this.backgroundRect = new Rectangle(turrent.getPosition().x - 56, turrent.getPosition().y + 16, 128, 32);
-        this.towerRect = new Rectangle(backgroundRect.x + 8, backgroundRect.y + 8, 16, 16);
+
+        this.currentTRegion = new TextureRegion(AssetsControl.getTexture("upgradeMenu"), 0, 0, (int)this.size.x, (int)this.size.y);
+        this.buttonsTRegion = new TextureRegion(AssetsControl.getTexture("upgradeMenu"), (int)this.size.x, 0, 64, 24);
+        
+        this.buttonsNormal = new ArrayList<TextureRegion>();
+        this.buttonsOver = new ArrayList<TextureRegion>();
+        this.numbersFont = new ArrayList<TextureRegion>();
+
+        for(int i = 0; i < 3; i++){
+            buttonsNormal.add(new TextureRegion(this.buttonsTRegion, 0, i * 8, 32, 8));
+        }
+
+        for(int i = 0; i < 3; i++){
+            buttonsOver.add(new TextureRegion(this.buttonsTRegion, 32, i * 8, 32, 8));
+        }
+
+        for(int i = 0; i <= 10; i++){
+            numbersFont.add(
+                new TextureRegion(
+                    new TextureRegion(AssetsControl.getTexture("upgradeMenu"), (int)this.size.x, (int)this.size.y - 5, 30, 5),
+                    i * 3,
+                    0,
+                    3,
+                    5
+                )
+            );
+        }
+        
+        this.splitedBtnsTRegion = new ArrayList<TextureRegion>(buttonsNormal);
+
+        this.size.x *= 3;
+        this.size.y *= 3;
+
+        // Para garantir que nunca seja desenhado fora da tela
+        if(this.position.x > Gdx.graphics.getWidth() - this.size.x){
+            this.position.x = Gdx.graphics.getWidth() - this.size.x;
+        }
+        if(this.position.y > Gdx.graphics.getHeight() - this.size.y){
+            this.position.y = Gdx.graphics.getHeight() - this.size.y;
+        }
+    }
+
+    private int buttonColide(Vector2 mousePos){
+        for(int i = 0; i < this.splitedBtnsTRegion.size(); i++) {
+            if((mousePos.x >= this.position.x + (2 * 3) && mousePos.x < this.position.x + (32 - 2) * 3) &&
+                (mousePos.y >= this.position.y + (3 + i * 9) * 3 && mousePos.y < this.position.y + (3 + i * 9 + 8) * 3)
+            ){
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public boolean handleClick(Vector2 mousePos) {
-        for (int i = 0; i < 5; i++) {
-            if (mousePos.x >= towerRect.x + i * (16 + 8) && mousePos.x < towerRect.x + i * (16 + 8) + 16
-                    && mousePos.y >= towerRect.y
-                    && mousePos.y <= towerRect.y + 16) {
-                mermaidUpdate = i;
-                return true;
+        mermaidUpdate = buttonColide(mousePos);
+
+        return mermaidUpdate == -1 ? false  : true;
+    }
+
+    public boolean handleMouseOver(Vector2 mousePos) {
+        int buttonPressed = buttonColide(mousePos);
+        
+
+        if(buttonPressed == -1) {
+            if(lastOver != buttonPressed) {
+                lastOver = buttonPressed;
+                this.splitedBtnsTRegion = new ArrayList<TextureRegion>(buttonsNormal);
             }
+            return false;
         }
-        return false;
+
+        this.splitedBtnsTRegion.set(buttonPressed, buttonsOver.get(buttonPressed));
+        
+        lastOver = buttonPressed;
+        return true;
     }
 
     public int upgrade(int coins) {
         switch (mermaidUpdate) {
             case 0:
-                if (coins >= turret.getDamageUpgradePrice()) {
-                    turret.upgradeDamage();
-                    return coins - turret.getDamageUpgradePrice();
-                }
-            case 1:
-                if (coins >= turret.getBulletDelayUpgradePrice()) {
-                    turret.upgradeBulletDelay();
-                    return coins - turret.getBulletDelayUpgradePrice();
-                }
-            case 2:
-                if (coins >= turret.getBulletSpeedUpgradePrice()) {
-                    turret.upgradeBulletSpeed();
+                if (turret.upgradeBulletSpeed() && coins >= turret.getBulletSpeedUpgradePrice()) {
                     return coins - turret.getBulletSpeedUpgradePrice();
                 }
-            case 3:
-                if (coins >= turret.getRangeUpgradePrice()) {
-                    turret.upgradeRange();
+            case 1:
+                if (turret.upgradeRange() && coins >= turret.getRangeUpgradePrice()) {
                     return coins - turret.getRangeUpgradePrice();
                 }
-            case 4:
-                if (coins >= turret.getLevelUpPrice()) {
-                    turret.levelUp();
-                    return coins - turret.getLevelUpPrice();
+            case 2:
+                if (turret.upgradeDamage() && coins >= turret.getDamageUpgradePrice()) {
+                    return coins - turret.getDamageUpgradePrice();
                 }
             default:
                 return coins;
         }
     }
 
+    @Override
+    public void update(float deltaTime){/* pass */}
+
     public Vector2 getTowerPos() {
         return turret.getPosition();
     }
 
-    public void draw(ShapeRenderer render) {
-        Color[] colors = { Color.GREEN, Color.PURPLE, Color.RED, Color.SKY, Color.GOLD };
-        render.begin(ShapeType.Filled);
-        render.setColor(Color.WHITE);
-        render.rect(backgroundRect.x, backgroundRect.y, backgroundRect.width, backgroundRect.height);
-
-        // Se tiver um jeito melhor de fazer isso aq, plmds, ta mt feio
-        for (int i = 0; i < colors.length; i++) {
-            render.setColor(colors[i]);
-            render.rect(towerRect.x + i * (16 + 8), towerRect.y, towerRect.width, towerRect.height);
+    @Override
+    public void draw(SpriteBatch batch) {
+        batch.draw(this.currentTRegion, (int)this.position.x, (int)this.position.y, (int)this.size.x,(int)this.size.y);
+    
+        for(int i = 0; i < this.splitedBtnsTRegion.size(); i++) {
+            batch.draw(this.splitedBtnsTRegion.get(i), (int)this.position.x, (int)this.position.y + (3 + i * 9) * 3, 32 * 3, 8 * 3);
+            
+            batch.draw(
+                this.numbersFont.get(turret.getUpdates(i)),
+                (int)this.position.x + 43 * 3,
+                (int)this.position.y + (3 + 11 * i) * 3,
+                3 * 3,
+                5 * 3
+            );
         }
-
-        render.end();
     }
 }
