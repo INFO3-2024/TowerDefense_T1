@@ -1,8 +1,8 @@
 package TowerDefense.GameObjects.base;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
@@ -22,12 +22,13 @@ public class Wave {
         this.enemyWay = enemyWay;
     }
 
-    public void update(float deltaTime, int textureOffset, int path) {
+    public void update(float deltaTime, int textureOffset) {
+        int path = (new Random()).nextInt(enemyWay.size());
+        
         if (timeBetween <= timeSinceLastSpawn && enemyQuantity > 0) {
             enemyQuantity--;
             timeSinceLastSpawn = 0;
-            enimiesArray.add(new Pirate(new Vector2(-textureOffset, Gdx.graphics.getHeight() / 2),
-                    new Vector2(textureOffset, textureOffset), enemyWay.get(path)));
+            enimiesArray.add(new Pirate(new Vector2(textureOffset, textureOffset), enemyWay.get(path)));
         }
         timeSinceLastSpawn += deltaTime;
     }

@@ -3,6 +3,9 @@ package TowerDefense.GameObjects.base;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+
+import TowerDefense.AssetsManager.AssetsControl;
+
 import java.util.ArrayList;
 
 public abstract class Mermaid extends GameObject {
@@ -15,11 +18,10 @@ public abstract class Mermaid extends GameObject {
     protected float timeFromLastBullet = 9999999999.f;
     protected float damage;
 
-    protected int rangeUpgrade = 0;
-    protected int damageUpgrade = 0;
-    protected int bulletDelayUpgrade = 0;
-    protected int bulletSpeedUpgrade = 0;
     protected int level = 1;
+    protected int[] upgrades = {0, 0, 0};
+    protected int mermaidType = 0; // Usado para pegar a textura certa
+    protected int sumUpgrades = 0;
 
     protected ArrayList<Bullet> bullets;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
@@ -45,7 +47,7 @@ public abstract class Mermaid extends GameObject {
     }
 
     public boolean inRange(Vector2 pos) {
-        if (Math.pow(range * 16, 2) >= Math.pow(pos.x - this.position.x, 2) + Math.pow(pos.y - this.position.y, 2)) {
+        if (Math.pow(range * 64, 2) >= Math.pow(pos.x - this.position.x, 2) + Math.pow(pos.y - this.position.y, 2)) {
             return true;
         }
         return false;
@@ -68,9 +70,21 @@ public abstract class Mermaid extends GameObject {
 
     @Override
     public void update(float deltaTime) {
+        super.update(deltaTime);
+        
         if (currenteTarget != null) {
             shoot(deltaTime);
+
         }
+
+        if(currenteTarget != null && mermaidType % 2 == 0) {
+            mermaidType += 1;
+            this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
+        } else if(currenteTarget == null && mermaidType % 2 == 1) {
+            mermaidType -= 1;
+            this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
+        }
+
         for (int i = 0; i < bullets.size(); i++) {
             Bullet bullet = bullets.get(i);
             bullet.update(deltaTime);
@@ -81,75 +95,94 @@ public abstract class Mermaid extends GameObject {
         }
     }
 
-    public void draw(TextureRegion tRegionTower, TextureRegion tRegionBullets, SpriteBatch batch) {
-        super.draw(tRegionTower, batch);
-        for (Bullet bullet : bullets) {
-            bullet.draw(tRegionBullets, batch);
-        }
-    }
+    public void draw(TextureRegion tRegionBullets, SpriteBatch batch) {
+        super.draw(batch);
 
-    @Override
-    public void dispose() {
-        /* Nothing to dipose also */
+        for (Bullet bullet : bullets) {
+            bullet.currentTRegion = tRegionBullets;
+            bullet.draw(batch);
+        }
     }
 
     // Upgrade functions
     public int getDamageUpgradePrice() {
-        return (this.damageUpgrade + 1) * 3;
+        return (this.upgrades[2] + 1) * 3;
     }
 
     public int getRangeUpgradePrice() {
-        return (this.rangeUpgrade + 1) * 1;
-    }
-
-    public int getBulletDelayUpgradePrice() {
-        return (this.bulletDelayUpgrade + 1) * 2;
+        return (this.upgrades[1] + 1) * 1;
     }
 
     public int getBulletSpeedUpgradePrice() {
 
-        return (this.bulletSpeedUpgrade + 1) * 2;
+        return (this.upgrades[0] + 1) * 2;
     }
 
-    public int getLevelUpPrice() {
-        return this.level * 50;
-    }
+    public boolean upgradeDamage() {
+        if(sumUpgrades >= 9 || level >= 3) 
+            return false;
 
-    public void upgradeDamage() {
-        this.damageUpgrade++;
+        this.upgrades[2]++;
+        this.sumUpgrades++;
         this.damage = this.damage * 1.1f;
+
+        levelUp();
+
+        return true;
     }
 
-    public void upgradeRange() {
-        this.rangeUpgrade++;
+    public boolean upgradeRange() {
+        if(sumUpgrades >= 9 || level >= 3) 
+            return false;
+
+        this.upgrades[1]++;
+        this.sumUpgrades++;
         this.range = this.range * 1.5f;
+
+        levelUp();
+        return true;
     }
 
-    public void upgradeBulletDelay() {
-        this.bulletDelayUpgrade++;
-        this.bulletDelay = this.bulletDelay * 0.9f;
-    }
+    public boolean upgradeBulletSpeed() {
+        if(sumUpgrades >= 9 || level >= 3) 
+            return false;
 
-    public void upgradeBulletSpeed() {
-        this.bulletSpeedUpgrade++;
+        this.upgrades[0]++;
+        this.sumUpgrades++;
         this.bulletSpeed = this.bulletSpeed * 1.2f;
+
+        this.bulletDelay = this.bulletDelay * 0.9f;
+
+        levelUp();
+
+        return true;
     }
 
-    public void levelUp() {
-        float damageMultiplier = (float) Math.pow(1.1f, this.damageUpgrade);
-        float onlyDamage = damage / damageMultiplier;
-        this.damage = onlyDamage * 1.5f * damageMultiplier;
+    public int getUpdates(int i) {
+        return this.upgrades[i];
+    }
 
-        float rangeMultiplier = (float) Math.pow(1.5f, this.rangeUpgrade);
-        float onlyRange = range / rangeMultiplier;
-        this.range = onlyRange * 1.25f * rangeMultiplier;
+    private void levelUp() {
+        if(sumUpgrades < this.level * 3 ){
+            return;
+        }
 
-        float bulletSpeeedMultiplier = (float) Math.pow(1.2f, this.bulletSpeedUpgrade);
-        float onlyBulletSpeed = bulletSpeed / bulletSpeeedMultiplier;
-        this.bulletSpeed = onlyBulletSpeed * 1.25f * bulletSpeeedMultiplier;
+        // Sim, cada nivel que ela aumenta tem que aumentar 2 aqui 
+        // se eu fiz assim é pq é assim.
+        
+        System.out.println("entrou");
 
-        float bulletDelayMultiplier = (float) Math.pow(0.9f, this.bulletDelayUpgrade);
-        float onlyBulletDelay = bulletDelay / bulletDelayMultiplier;
-        this.bulletDelay = onlyBulletDelay * 0.75f * bulletDelayMultiplier;
+        this.level += 1;
+        this.mermaidType += 2;
+        this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f); 
+    }
+
+    public ArrayList<Bullet> getBullets(){
+        return this.bullets;
+    }
+    
+    @Override
+    public void dispose() {
+        /* Nothing to dipose also */
     }
 }
