@@ -53,7 +53,7 @@ public abstract class Mermaid extends GameObject {
         return false;
     }
 
-    private void shoot(float deltaTime) {
+    protected void shoot(float deltaTime) {
         if (bulletDelay <= timeFromLastBullet) {
             float distanceToEnemy = (float) Math.sqrt(
                     Math.pow(currenteTarget.position.x - this.position.x, 2)
@@ -162,15 +162,13 @@ public abstract class Mermaid extends GameObject {
         return this.upgrades[i];
     }
 
-    private void levelUp() {
+    protected void levelUp() {
         if(sumUpgrades < this.level * 3 ){
             return;
         }
 
         // Sim, cada nivel que ela aumenta tem que aumentar 2 aqui 
         // se eu fiz assim é pq é assim.
-        
-        System.out.println("entrou");
 
         this.level += 1;
         this.mermaidType += 2;

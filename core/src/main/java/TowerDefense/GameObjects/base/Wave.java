@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Queue;
 import TowerDefense.GameObjects.Enemys.Pirate;
 
 public class Wave {
-    private float timeBetween = 0.500f;
+    private float timeBetween = 1.f;
     private int enemyQuantity = 5;
 
     private float timeSinceLastSpawn = 0.f;
@@ -31,5 +31,7 @@ public class Wave {
             enimiesArray.add(new Pirate(new Vector2(textureOffset, textureOffset), enemyWay.get(path)));
         }
         timeSinceLastSpawn += deltaTime;
+
+        
     }
 }

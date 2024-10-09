@@ -13,7 +13,7 @@ public class GameScreen implements Screen {
 	private Stage stage;
 
 	public GameScreen() {
-		stage = new Stage3();
+		stage = new Stage1();
 	}
 
 	@Override

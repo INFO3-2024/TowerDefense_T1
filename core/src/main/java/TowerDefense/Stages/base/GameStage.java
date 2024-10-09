@@ -1,7 +1,6 @@
 package TowerDefense.Stages.base;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,13 +13,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Queue;
 
 import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.GameObjects.Cannons.Cannon;
 import TowerDefense.GameObjects.Interface.BuildMenu;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Enemy;
-import TowerDefense.GameObjects.base.GameObject;
 import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
 import TowerDefense.GameObjects.base.Wave;
@@ -217,6 +215,11 @@ public class GameStage extends Stage {
 			for (Enemy enemy : enemies) { // Responsavel por pegar o primeiro inimigo gerado
 				if (tower.inRange(enemy.getPosition())) {
 					tower.setCurrentTarget(enemy);
+
+					if(tower instanceof Cannon) {
+						((Cannon)tower).setEnemies(this.enemies);
+					}
+
 					break;
 				}
 			}

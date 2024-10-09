@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.GameObjects.Cannons.Cannon;
 import TowerDefense.GameObjects.Mermaids.BlueMermaid;
 import TowerDefense.GameObjects.Mermaids.GreenMermaid;
 import TowerDefense.GameObjects.Mermaids.PinkMermaid;
@@ -55,17 +56,16 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
             case 3:
                 return new GreenMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
             case 4:
-                return new BlueMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
+            return new BlueMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
             case 5:
-                // Canhãããããão
-                return null;
+                return new Cannon(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
             default:
                 return null;
         }
     }
 
     public boolean handleClick(Vector2 mousePos) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i <= 5; i++) {
             if(
                 (mousePos.x >= this.position.x + 32 + 58 * i && mousePos.x < this.position.x + 64 + 58 * i) &&
                 (mousePos.y >= this.position.y + 86 && mousePos.y < this.position.y + 150)
@@ -87,6 +87,5 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(this.currentTRegion, (int)this.position.x , (int)this.position.y, (int)this.size.x, (int)this.size.y);
-    
     }
 }
