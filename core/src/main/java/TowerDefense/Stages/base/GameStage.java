@@ -54,8 +54,13 @@ public class GameStage extends Stage {
 
 	protected int coins = 999;
 
-	public GameStage(int stage) {
-		mapGame = new Map(stage);
+	private int stageLevel;
+	private int levelDificulty;
+
+	public GameStage(int stageLevel, int levelDificulty) {
+		mapGame = new Map(stageLevel);
+		this.stageLevel = stageLevel;
+		this.levelDificulty = levelDificulty;
 
 		batch = mapGame.getBatch();
 		shapeRenderer = new ShapeRenderer();
@@ -283,6 +288,18 @@ public class GameStage extends Stage {
 		for (Enemy enemy : enemies) {
 			enemy.drawLifeBar(shapeRenderer);
 		}
+	}
+
+	public int updateKey(int keyGame) {
+		if(false) {
+			if(keyGame < 4) {
+				keyGame++;	
+			}else {
+				keyGame =1;
+			}
+			
+		}
+		return keyGame;
 	}
 
 	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI? AGRADECIDO

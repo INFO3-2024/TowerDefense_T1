@@ -1,0 +1,7 @@
+button_play;64,44;223,120
+button_quit;64,180;223,120
+button_help;532,47;132,115
+button_settings;532,180;132,115
+button_easy;293,44;227,117
+button_medium;293,171;227,117
+button_hard;293,305;227,117
