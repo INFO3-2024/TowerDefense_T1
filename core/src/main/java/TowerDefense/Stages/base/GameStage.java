@@ -1,6 +1,9 @@
 package TowerDefense.Stages.base;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,10 +16,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 import TowerDefense.AssetsManager.AssetsControl;
 import TowerDefense.GameObjects.Cannons.Cannon;
 import TowerDefense.GameObjects.Interface.BuildMenu;
+import TowerDefense.GameObjects.Interface.Button;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.InterfaceMenu;
@@ -54,6 +60,10 @@ public class GameStage extends Stage {
 
 	protected int coins = 999;
 
+	protected JsonValue waves;
+
+	protected Button skipWaveButton;
+
 	public GameStage(int stage) {
 		mapGame = new Map(stage);
 
@@ -67,14 +77,16 @@ public class GameStage extends Stage {
 		towers = new ArrayList<Mermaid>();
 		enemies = new ArrayList<Enemy>();
 
-		wave = new Wave(enemies, mapGame.getListPaths());
-
 		textureOffset = 64;
 		gameTexture = new Texture(Gdx.files.internal("Asset.png"));
 		bulletTexture = new TextureRegion(gameTexture, textureOffset, textureOffset, textureOffset, textureOffset);
 
 		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, textureOffset, textureOffset,
 				textureOffset);
+
+		skipWaveButton = new Button(900, 20, 50, 24);
+
+		this.loadWave("Stage" + stage);
 
 		Gdx.input.setInputProcessor(new InputProcessor() {
 			@Override
@@ -125,12 +137,32 @@ public class GameStage extends Stage {
 		});
 	}
 
+	private void loadWave(String fileName) {
+		try {
+			FileReader file = new FileReader("./core/src/main/java/TowerDefense/Waves/" + fileName + ".json");
+			BufferedReader buffer = new BufferedReader(file);
+			String jsonString = buffer.lines().collect(Collectors.joining());
+
+			waves = new JsonReader().parse(jsonString).getChild("waves");
+
+			wave = new Wave(enemies, mapGame.getListPaths(), waves, this.textureOffset);
+		} catch (Exception e) {
+			System.err.println("Arquivo de waves não encontrado!");
+		}
+	}
+
 	protected void onLeftMouseDown(Vector2 pos) {
 		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 		Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
-		if(buildMode == null && mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
+		if (skipWaveButton.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y)) && wave.waveConcluded()) {
+			this.coins += (int) 2 * wave.antecipateWave();
+			return;
+		}
+
+		if (buildMode == null && mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset,
+				Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
 			return;
 		}
 
@@ -177,8 +209,9 @@ public class GameStage extends Stage {
 	protected void mouseMovedHandle(Vector2 pos) {
 		Vector2 mousePos = new Vector2(((int) Gdx.input.getX() / textureOffset) * textureOffset,
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
-				
-		if(buildMode == null && mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset, Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
+
+		if (buildMode == null && mapGame.isPointOnPath(new Vector2(((int) pos.x / textureOffset) * textureOffset,
+				Gdx.graphics.getHeight() - textureOffset - ((int) pos.y / textureOffset) * textureOffset))) {
 			mousePosSprite.setPosition(-textureOffset, -textureOffset);
 			return;
 		}
@@ -200,7 +233,8 @@ public class GameStage extends Stage {
 			// Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
 			if (mousePos.x == tower.getPosition().x
 					&& Gdx.graphics.getHeight() - mousePos.y - textureOffset == tower.getPosition().y) {
-				this.turretRangeCircle = new Circle(mousePos.x + textureOffset / 2, Gdx.graphics.getHeight() - mousePos.y - 8,
+				this.turretRangeCircle = new Circle(mousePos.x + textureOffset / 2,
+						Gdx.graphics.getHeight() - mousePos.y - 8,
 						tower.getRange() * textureOffset);
 			}
 		}
@@ -216,8 +250,8 @@ public class GameStage extends Stage {
 				if (tower.inRange(enemy.getPosition())) {
 					tower.setCurrentTarget(enemy);
 
-					if(tower instanceof Cannon) {
-						((Cannon)tower).setEnemies(this.enemies);
+					if (tower instanceof Cannon) {
+						((Cannon) tower).setEnemies(this.enemies);
 					}
 
 					break;
@@ -238,7 +272,7 @@ public class GameStage extends Stage {
 			tower.update(delta);
 		}
 
-		wave.update(delta, textureOffset);
+		wave.update(delta);
 
 		assetsManager.update(delta);
 	}
@@ -283,19 +317,25 @@ public class GameStage extends Stage {
 		for (Enemy enemy : enemies) {
 			enemy.drawLifeBar(shapeRenderer);
 		}
+
+		if (wave.waveConcluded()) {
+			skipWaveButton.draw(shapeRenderer);
+		}
 	}
 
 	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI? AGRADECIDO
-	public void resize(int height, int width) { /* pass */}
+	// Agradecido fico eu. :)
+	public void resize(int height, int width) {
+		/* pass */}
 
 	public Map getMapGame() {
 		return mapGame;
 	}
-	
+
 	public void setMapGame(Map mapGame) {
 		this.mapGame = mapGame;
 	}
-	
+
 	@Override
 	public void dispose() {
 		batch.dispose();
