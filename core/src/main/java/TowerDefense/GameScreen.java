@@ -25,23 +25,21 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		update();
 		switch (keyGame) {
 			case 1:
-				lobby.draw();
 				lobby.act();
+				lobby.draw();
 				keyGame = ((Lobby) lobby).updateKey();
 				dificultyGame = ((Lobby) lobby).updateDificulty();
 				break;
 
 			default:
-				stage.draw();
 				stage.act();
+				stage.draw();
 				keyGame = ((GameStage) stage).updateKey(keyGame);
-
 				break;
 		}
-
+		update();
 	}
 
 	private void update() {

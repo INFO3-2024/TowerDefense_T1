@@ -86,8 +86,16 @@ public class Wave {
         return false;
     }
 
+    public boolean ended() {
+        if (this.jWaves.next() == null && this.enimiesArray.isEmpty()) {
+            System.out.println(this.jWaves);
+            return true;
+        }
+        return false;
+    }
+
     public float antecipateWave() {
-        if (enemiesToBeAdded.empty()) {
+        if (enemiesToBeAdded.empty() && this.jWaves.next() != null) {
             this.jWaves = this.jWaves.next();
             this.loadEnemies();
             return this.waveDelay - this.timeSinceLastSpawn;

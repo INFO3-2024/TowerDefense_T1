@@ -91,7 +91,7 @@ public class GameStage extends Stage {
 
 		skipWaveButton = new Button(900, 20, 50, 24);
 
-		this.loadWave("Stage" + stageLevel);
+		this.loadWave("Stage" + this.stageLevel);
 
 		Gdx.input.setInputProcessor(new InputProcessor() {
 			@Override
@@ -144,9 +144,11 @@ public class GameStage extends Stage {
 
 	private void loadWave(String fileName) {
 		try {
-			FileReader file = new FileReader("./core/src/main/java/TowerDefense/Waves/" + fileName + ".json");
+			FileReader file = new FileReader("./core/src/main/java/TowerDefense/Waves/" + fileName + "Difficulty"
+					+ this.levelDificulty + ".json");
 			BufferedReader buffer = new BufferedReader(file);
 			String jsonString = buffer.lines().collect(Collectors.joining());
+			buffer.close();
 
 			int timeBetweenWaves = new JsonReader().parse(jsonString).getInt("timeBetweenWaves");
 
@@ -163,7 +165,8 @@ public class GameStage extends Stage {
 				((int) Gdx.input.getY() / textureOffset) * textureOffset);
 		Vector2 turretPos = new Vector2(mousePos.x, Gdx.graphics.getHeight() - mousePos.y - textureOffset);
 
-		if (skipWaveButton.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y)) && wave.waveConcluded()) {
+		if (skipWaveButton.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y)) && wave.waveConcluded()
+				&& !wave.ended()) {
 			this.coins += (int) 2 * wave.antecipateWave();
 			return;
 		}
@@ -325,13 +328,13 @@ public class GameStage extends Stage {
 			enemy.drawLifeBar(shapeRenderer);
 		}
 
-		if (wave.waveConcluded()) {
+		if (wave.waveConcluded() && !wave.ended()) {
 			skipWaveButton.draw(shapeRenderer);
 		}
 	}
 
 	public int updateKey(int keyGame) {
-		if (enemies.isEmpty() && waves.next == null) {
+		if (this.wave.ended()) {
 			if (keyGame < 4) {
 				keyGame++;
 			} else {

@@ -1,0 +1,82 @@
+{
+    "timeBetweenWaves": 11,
+    "waves": [{
+        "pirates": 18,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 14,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 16,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 10,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 12,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 3,
+        "pirateCaptain": 0,
+        "zombiePirate": 4,
+        "boss": 4
+    },
+    {
+        "pirates": 6,
+        "pirateCaptain": 0,
+        "zombiePirate": 6,
+        "boss": 4
+    },
+    {
+        "pirates": 9,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 5
+    },
+    {
+        "pirates": 11,
+        "pirateCaptain": 0,
+        "zombiePirate": 2,
+        "boss": 5
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 6
+    },
+    {
+        "pirates": 13,
+        "pirateCaptain": 3,
+        "zombiePirate": 6,
+        "boss": 6
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 7
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 8
+    }
+]
+}
