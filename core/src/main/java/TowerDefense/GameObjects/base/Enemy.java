@@ -58,7 +58,7 @@ public abstract class Enemy extends GameObject {
                 return;
             }
             this.position.y += Math.signum(this.wayPoints.last().y - this.position.y) * leftOverDistance;
-            
+
         }
 
         if (Math.signum(diffToNextVector.y) * this.position.y > Math.signum(diffToNextVector.y) * nextVector.y) {
@@ -78,7 +78,8 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(currentTRegion, this.position.x - 17, this.position.y - 14, (int)(this.size.x * 1.45), (int)(this.size.y * 1.45));
+        batch.draw(currentTRegion, this.position.x - 17, this.position.y - 14, (int) (this.size.x * 1.45),
+                (int) (this.size.y * 1.45));
     }
 
     public float getVelocity() {
@@ -99,12 +100,12 @@ public abstract class Enemy extends GameObject {
 
     public void drawLifeBar(ShapeRenderer render) {
         render.begin(ShapeType.Filled);
-        render.setColor(Color.BLUE);
+        render.setColor(Color.BLACK);
         render.rect(this.position.x, this.position.y - 3, this.size.x, 2);
         render.end();
 
         render.begin(ShapeType.Filled);
-        render.setColor(Color.YELLOW);
+        render.setColor(Color.RED);
         render.rect(this.position.x, this.position.y - 3, this.size.x * this.life / this.maxLife, 2);
         render.end();
     }
@@ -117,6 +118,10 @@ public abstract class Enemy extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
         this.move(deltaTime);
+        this.powerUp(deltaTime);
+    }
+
+    public void powerUp(float deltaTime) {
     }
 
     @Override

@@ -11,8 +11,8 @@ public class Pirate extends Enemy {
         public Pirate(Vector2 size, Queue<Vector2> wayPoints) {
                 super(size, wayPoints);
                 super.dropedCoins = 10;
-                super.velocity = 80.f;
-                super.life = 1.25f;
+                super.velocity = 60.f;
+                super.life = 10.f;
                 super.maxLife = super.life;
 
                 textureRegions = AssetsControl.getTextureRegions("basicEnemy");
