@@ -64,8 +64,13 @@ public class GameStage extends Stage {
 
 	protected Button skipWaveButton;
 
-	public GameStage(int stage) {
-		mapGame = new Map(stage);
+	private int stageLevel;
+	private int levelDificulty;
+
+	public GameStage(int stageLevel, int levelDificulty) {
+		mapGame = new Map(stageLevel);
+		this.stageLevel = stageLevel;
+		this.levelDificulty = levelDificulty;
 
 		batch = mapGame.getBatch();
 		shapeRenderer = new ShapeRenderer();
@@ -86,7 +91,7 @@ public class GameStage extends Stage {
 
 		skipWaveButton = new Button(900, 20, 50, 24);
 
-		this.loadWave("Stage" + stage);
+		this.loadWave("Stage" + stageLevel);
 
 		Gdx.input.setInputProcessor(new InputProcessor() {
 			@Override
@@ -323,6 +328,17 @@ public class GameStage extends Stage {
 		if (wave.waveConcluded()) {
 			skipWaveButton.draw(shapeRenderer);
 		}
+	}
+
+	public int updateKey(int keyGame) {
+		if (enemies.isEmpty() && waves.next == null) {
+			if (keyGame < 4) {
+				keyGame++;
+			} else {
+				keyGame = 1;
+			}
+		}
+		return keyGame;
 	}
 
 	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI? AGRADECIDO

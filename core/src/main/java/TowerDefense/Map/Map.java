@@ -19,7 +19,7 @@ public class Map {
 	public Map(int stage) {
 		this.stage = stage;
 		this.listPaths = getPositionsMap();
-		this.background = new Texture(Gdx.files.internal("Map" + stage + ".jpg"));
+		this.background = new Texture(Gdx.files.internal("Maps/Map" + stage + ".jpg"));
 
 		batch = new SpriteBatch();
 	}
