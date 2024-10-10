@@ -63,8 +63,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		((GameStage) stage).resize(height, width);
-		stage.act();
+		// ((GameStage) stage).resize(height, width);
+		// stage.act();
 	}
 
 	@Override
