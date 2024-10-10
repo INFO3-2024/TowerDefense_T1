@@ -7,12 +7,13 @@ import TowerDefense.AssetsManager.AssetsControl;
 import TowerDefense.GameObjects.base.Enemy;
 
 public class ZombiePirate extends Enemy {
+    float timeSinceLastHeal = 0.f;
 
     public ZombiePirate(Vector2 size, Queue<Vector2> wayPoints) {
         super(size, wayPoints);
         super.dropedCoins = 15;
-        super.velocity = 40.f;
-        super.life = 3.f;
+        super.velocity = 60.f;
+        super.life = 30.f;
         super.maxLife = super.life;
 
         textureRegions = AssetsControl.getTextureRegions("basicEnemy");
@@ -20,4 +21,13 @@ public class ZombiePirate extends Enemy {
         this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
     }
 
+    @Override
+    public void powerUp(float deltaTime) {
+        this.timeSinceLastHeal += deltaTime;
+
+        if (timeSinceLastHeal >= 10) {
+            this.timeSinceLastHeal = 0;
+            this.life = Math.min(maxLife, life += 5);
+        }
+    }
 }

@@ -118,6 +118,10 @@ public abstract class Enemy extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
         this.move(deltaTime);
+        this.powerUp(deltaTime);
+    }
+
+    public void powerUp(float deltaTime) {
     }
 
     @Override

@@ -143,9 +143,11 @@ public class GameStage extends Stage {
 			BufferedReader buffer = new BufferedReader(file);
 			String jsonString = buffer.lines().collect(Collectors.joining());
 
+			int timeBetweenWaves = new JsonReader().parse(jsonString).getInt("timeBetweenWaves");
+
 			waves = new JsonReader().parse(jsonString).getChild("waves");
 
-			wave = new Wave(enemies, mapGame.getListPaths(), waves, this.textureOffset);
+			wave = new Wave(enemies, mapGame.getListPaths(), waves, this.textureOffset, timeBetweenWaves);
 		} catch (Exception e) {
 			System.err.println("Arquivo de waves não encontrado!");
 		}

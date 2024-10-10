@@ -26,12 +26,14 @@ public class Wave {
     private JsonValue jWaves;
     private int textureOffset;
 
-    public Wave(ArrayList<Enemy> enemies, ArrayList<Queue<Vector2>> enemyWay, JsonValue waves, int textureOffset) {
+    public Wave(ArrayList<Enemy> enemies, ArrayList<Queue<Vector2>> enemyWay, JsonValue waves, int textureOffset,
+            int timeBetweenWaves) {
         this.enemiesToBeAdded = new Stack<Enemy>();
         enimiesArray = enemies;
         this.enemyWay = enemyWay;
         this.jWaves = waves;
         this.textureOffset = textureOffset;
+        this.waveDelay = timeBetweenWaves;
 
         this.loadEnemies();
     }
@@ -42,7 +44,7 @@ public class Wave {
         for (int i = 0; i < jWaves.getInt("boss"); i++) {
             path = (new Random()).nextInt(enemyWay.size());
             enemiesToBeAdded.add(new Boss(new Vector2(textureOffset, textureOffset),
-                    enemyWay.get(path)));
+                    enemyWay.get(path), this.enimiesArray));
         }
 
         for (int i = 0; i < jWaves.getInt("zombiePirate"); i++) {
