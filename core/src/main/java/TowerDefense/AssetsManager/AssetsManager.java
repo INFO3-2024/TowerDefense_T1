@@ -3,7 +3,6 @@ package TowerDefense.AssetsManager;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,15 +10,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class AssetsControl extends ApplicationAdapter {
+public class AssetsManager {
+    private static final AssetsManager INSTANCE = new AssetsManager();
+
     private AssetManager assetManager;
     private static float stateTime;
 
     private static Map<String, Texture> textures;
     private static Map<String, Music> sounds;
 
-    @Override
-    public void create() {
+    private AssetsManager() {
         assetManager = new AssetManager();
         textures = new HashMap<String, Texture>();
         sounds = new HashMap<String, Music>();
@@ -30,6 +30,8 @@ public class AssetsControl extends ApplicationAdapter {
         assetManager.load("Mermaids/PurpleMermaid.png", Texture.class);
         assetManager.load("Mermaids/GreenMermaid.png", Texture.class);
         assetManager.load("Mermaids/BlueMermaid.png", Texture.class);
+        assetManager.load("Mermaids/TowersPower.png", Texture.class);
+        assetManager.load("Mermaids/SelectPos.png", Texture.class);
 
         assetManager.load("Enemies/BasicEnemy.png", Texture.class);
 
@@ -54,6 +56,8 @@ public class AssetsControl extends ApplicationAdapter {
         textures.put("purpleMermaid", assetManager.get("Mermaids/PurpleMermaid.png", Texture.class));
         textures.put("greenMermaid", assetManager.get("Mermaids/GreenMermaid.png", Texture.class));
         textures.put("blueMermaid", assetManager.get("Mermaids/BlueMermaid.png", Texture.class));
+        textures.put("towersPower", assetManager.get("Mermaids/TowersPower.png", Texture.class));
+        textures.put("selectPos", assetManager.get("Mermaids/SelectPos.png", Texture.class));
         textures.put("basicEnemy", assetManager.get("Enemies/BasicEnemy.png", Texture.class));
         textures.put("cannon", assetManager.get("Cannons/Cannon.png", Texture.class));
         textures.put("upgradeMenu", assetManager.get("Menus/UpgradeMenu.png", Texture.class));
@@ -83,9 +87,11 @@ public class AssetsControl extends ApplicationAdapter {
     }
 
     public static TextureRegion[][] getTextureRegions(String key, Vector2 size) {
-        return TextureRegion.split(textures.get(key),
-            /*textures.get(key).getWidth() / 4*/ (int)size.x,
-            /*textures.get(key).getHeight() / 6*/(int)size.y);
+        return TextureRegion.split(
+            textures.get(key),
+            (int)size.x,
+            (int)size.y
+        );
     }
 
     public static TextureRegion[][] getTextureRegions(String key) {
@@ -100,7 +106,10 @@ public class AssetsControl extends ApplicationAdapter {
         return animation.getKeyFrame(stateTime, true);
     }
 
-    @Override
+    static public AssetsManager getInstance() {
+        return INSTANCE;
+    }
+
     public void dispose() {
         assetManager.dispose();
     }

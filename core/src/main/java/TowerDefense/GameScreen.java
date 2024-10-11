@@ -4,20 +4,28 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import TowerDefense.Stages.base.GameStage;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.Lobby.Lobby;
 import TowerDefense.Stages.Stage1;
 import TowerDefense.Stages.Stage2;
 import TowerDefense.Stages.Stage3;
 
 public class GameScreen implements Screen {
+	private static final GameScreen INSTANCE = new GameScreen();
+
+	private AssetsManager assetsManager;
+
 	private Stage stage;
 	private Stage lobby;
 	private int keyGame;
 	private int dificultyGame;
 	private boolean checkNext;
 
-	public GameScreen() {
+	private GameScreen() {
 		this.checkNext = true;
+
+		assetsManager = AssetsManager.getInstance();
+
 		keyGame = 1;
 		dificultyGame = 0;
 		update();
@@ -40,6 +48,8 @@ public class GameScreen implements Screen {
 				break;
 		}
 		update();
+
+		assetsManager.update(delta);
 	}
 
 	private void update() {
@@ -56,33 +66,30 @@ public class GameScreen implements Screen {
 			lobby = new Lobby();
 			checkNext = false;
 		}
-
 	}
 
-	@Override
-	public void resize(int width, int height) {
-		// ((GameStage) stage).resize(height, width);
-		// stage.act();
+	public static GameScreen getInstance() {
+		return INSTANCE;
 	}
-
+	
 	@Override
 	public void dispose() {
 		stage.dispose();
+		assetsManager.dispose();
 	}
 
 	@Override
-	public void show() {
-	}
+	public void resize(int width, int height){ /* pass */ }
 
 	@Override
-	public void pause() {
-	}
+	public void show() { /* pass */ }
 
 	@Override
-	public void resume() {
-	}
+	public void pause() { /* pass */ }
 
 	@Override
-	public void hide() {
-	}
+	public void resume() { /* pass */ }
+
+	@Override
+	public void hide() { /* pass */ }
 }

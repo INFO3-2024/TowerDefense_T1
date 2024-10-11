@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 
 public abstract class GameObject {
     protected Vector2 position;
@@ -20,11 +20,11 @@ public abstract class GameObject {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(currentTRegion, this.position.x - 17, this.position.y, (int)(this.size.x * 1.45), (int)(this.size.y * 1.45));
+        batch.draw(currentTRegion, this.position.x, this.position.y, (int)(this.size.x), (int)(this.size.y));
     }
 
     public void update(float deltaTime){
-        this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
+        this.currentTRegion = AssetsManager.getCurrentTRegion(animation);
     }
 
     public Vector2 getPosition() {

@@ -1,4 +1,4 @@
-package TowerDefense.GameObjects.Enemys;
+package TowerDefense.GameObjects.Enemies;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.base.Enemy;
 
 public class PirateCaptain extends Enemy {
@@ -20,9 +20,9 @@ public class PirateCaptain extends Enemy {
         super.life = 100.f;
         super.maxLife = super.life;
 
-        textureRegions = AssetsControl.getTextureRegions("basicEnemy");
-        animation = AssetsControl.getAnimation(textureRegions, 4, 0.15f);
-        this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
+        textureRegions = AssetsManager.getTextureRegions("basicEnemy");
+        animation = AssetsManager.getAnimation(textureRegions, 4, 0.15f);
+        this.currentTRegion = AssetsManager.getCurrentTRegion(animation);
     }
 
     @Override

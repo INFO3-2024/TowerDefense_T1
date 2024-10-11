@@ -8,13 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 
-import TowerDefense.GameObjects.Enemys.Boss;
-import TowerDefense.GameObjects.Enemys.Pirate;
-import TowerDefense.GameObjects.Enemys.PirateCaptain;
-import TowerDefense.GameObjects.Enemys.ZombiePirate;
+import TowerDefense.GameObjects.Enemies.Boss;
+import TowerDefense.GameObjects.Enemies.Pirate;
+import TowerDefense.GameObjects.Enemies.PirateCaptain;
+import TowerDefense.GameObjects.Enemies.ZombiePirate;
 
 public class Wave {
-    private float timeBetween = 0.5f;
+    private float timeBetween = 1.f;
 
     private int waveDelay = 20;
 

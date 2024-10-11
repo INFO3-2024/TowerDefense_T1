@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.Bubbles.Bubble;
 
 public class Lobby extends Stage {
@@ -22,24 +22,21 @@ public class Lobby extends Stage {
 	private SpriteBatch batch;
 	private Music music;
 	private Texture background;
-	private AssetsControl assetsManager;
 	protected int oldX;
 	protected int oldY;
 	private ArrayList<Bubble> bubbles;
 	private boolean isLevels;
 
 	public Lobby() {
-		this.assetsManager = new AssetsControl();
-		this.assetsManager.create();
 		this.home = new Home();
 		this.level = new Levels();
 		this.KeyGame = 1;
 		this.batch = new SpriteBatch();
-		this.music = AssetsControl.getSounds("musicLobby");
+		this.music = AssetsManager.getSounds("musicLobby");
 		this.music.setLooping(true);
 		this.music.setVolume(100);
 		this.music.play();
-		this.background = AssetsControl.getTexture("background_Home");
+		this.background = AssetsManager.getTexture("background_Home");
 		this.oldX = 0;
 		this.oldY = 0;
 		this.bubbles = new ArrayList<Bubble>();
@@ -103,7 +100,7 @@ public class Lobby extends Stage {
 		if (!isLevels) {
 			home.draw(batch);
 		} else {
-			this.background = AssetsControl.getTexture("background_Levels");
+			this.background = AssetsManager.getTexture("background_Levels");
 			level.draw(batch);
 		}
 
@@ -122,7 +119,7 @@ public class Lobby extends Stage {
 		if (!isLevels) {
 			isLevels = home.update();
 		} else {
-			this.background = AssetsControl.getTexture("background_Levels");
+			this.background = AssetsManager.getTexture("background_Levels");
 			level.update();
 			setDificulty(level.getDificulty());
 		}
@@ -136,7 +133,5 @@ public class Lobby extends Stage {
 			KeyGame = 2;
 			music.dispose();
 		}
-
-		assetsManager.update(delta);
 	}
 }

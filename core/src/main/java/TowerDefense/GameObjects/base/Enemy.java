@@ -78,8 +78,8 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(currentTRegion, this.position.x - 17, this.position.y - 14, (int) (this.size.x * 1.45),
-                (int) (this.size.y * 1.45));
+        batch.draw(currentTRegion, this.position.x - 17, this.position.y - 14, (int)(this.size.x * 1.45),
+                (int)(this.size.y * 1.45));
     }
 
     public float getVelocity() {
@@ -121,8 +121,7 @@ public abstract class Enemy extends GameObject {
         this.powerUp(deltaTime);
     }
 
-    public void powerUp(float deltaTime) {
-    }
+    public void powerUp(float deltaTime) { /* pass */ }
 
     @Override
     public void dispose() {

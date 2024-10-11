@@ -4,7 +4,7 @@ package TowerDefense.GameObjects.Bubbles;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 
 import TowerDefense.GameObjects.base.GameObject;
 
@@ -14,9 +14,9 @@ public class Bubble extends GameObject{
     	super(position, size);
         this.position = position;
         this.size = size;
-        textureRegions = AssetsControl.getTextureRegions("bubblesLobby");
-        animation = AssetsControl.getAnimation(textureRegions, 0, 0.15f);
-        this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
+        textureRegions = AssetsManager.getTextureRegions("bubblesLobby");
+        animation = AssetsManager.getAnimation(textureRegions, 0, 0.15f);
+        this.currentTRegion = AssetsManager.getCurrentTRegion(animation);
         this.space = MathUtils.random(30f,70f);
     }
     

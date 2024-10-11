@@ -29,7 +29,7 @@ public class Map {
 
 		try {
 			ArrayList<String> lines = new ArrayList<String>();
-			FileReader file = new FileReader("./lwjgl3/coords/map" + stage + ".coord");
+			FileReader file = new FileReader("../lwjgl3/coords/map" + stage + ".coord");
 			BufferedReader buffer = new BufferedReader(file);
 			String lineFile = buffer.readLine();
 

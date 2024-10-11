@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.base.GameObject;
 import TowerDefense.GameObjects.base.InterfaceMenu;
-import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.Tower;
 
 public class UpgradeMenu extends GameObject implements InterfaceMenu {
-    private Mermaid turret;
+    private Tower turret;
 
     private int mermaidUpdate, lastOver = -1;
 
@@ -21,12 +21,12 @@ public class UpgradeMenu extends GameObject implements InterfaceMenu {
 
     ArrayList<TextureRegion> splitedBtnsTRegion, buttonsNormal, buttonsOver, numbersFont;
 
-    public UpgradeMenu(Mermaid turrent) {
+    public UpgradeMenu(Tower turrent) {
         super(new Vector2(turrent.getPosition().x + 64, turrent.getPosition().y), new Vector2(48, 32));
         this.turret = turrent;
 
-        this.currentTRegion = new TextureRegion(AssetsControl.getTexture("upgradeMenu"), 0, 0, (int)this.size.x, (int)this.size.y);
-        this.buttonsTRegion = new TextureRegion(AssetsControl.getTexture("upgradeMenu"), (int)this.size.x, 0, 64, 24);
+        this.currentTRegion = new TextureRegion(AssetsManager.getTexture("upgradeMenu"), 0, 0, (int)this.size.x, (int)this.size.y);
+        this.buttonsTRegion = new TextureRegion(AssetsManager.getTexture("upgradeMenu"), (int)this.size.x, 0, 64, 24);
         
         this.buttonsNormal = new ArrayList<TextureRegion>();
         this.buttonsOver = new ArrayList<TextureRegion>();
@@ -43,7 +43,7 @@ public class UpgradeMenu extends GameObject implements InterfaceMenu {
         for(int i = 0; i <= 10; i++){
             numbersFont.add(
                 new TextureRegion(
-                    new TextureRegion(AssetsControl.getTexture("upgradeMenu"), (int)this.size.x, (int)this.size.y - 5, 30, 5),
+                    new TextureRegion(AssetsManager.getTexture("upgradeMenu"), (int)this.size.x, (int)this.size.y - 5, 30, 5),
                     i * 3,
                     0,
                     3,

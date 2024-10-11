@@ -1,10 +1,10 @@
-package TowerDefense.GameObjects.Enemys;
+package TowerDefense.GameObjects.Enemies;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 import java.util.ArrayList;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.base.Enemy;
 
 public class Boss extends Enemy {
@@ -21,9 +21,9 @@ public class Boss extends Enemy {
         super.maxLife = super.life;
         this.enimiesArray = enimiesArray;
 
-        textureRegions = AssetsControl.getTextureRegions("basicEnemy");
-        animation = AssetsControl.getAnimation(textureRegions, 3, 0.15f);
-        this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
+        textureRegions = AssetsManager.getTextureRegions("basicEnemy");
+        animation = AssetsManager.getAnimation(textureRegions, 3, 0.15f);
+        this.currentTRegion = AssetsManager.getCurrentTRegion(animation);
 
         this.originalWayPoints = new Queue<Vector2>();
         this.originalWayPoints.clear();

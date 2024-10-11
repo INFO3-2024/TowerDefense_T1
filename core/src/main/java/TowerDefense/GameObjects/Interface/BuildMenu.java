@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.Cannons.Cannon;
 import TowerDefense.GameObjects.Mermaids.BlueMermaid;
 import TowerDefense.GameObjects.Mermaids.GreenMermaid;
@@ -14,7 +14,7 @@ import TowerDefense.GameObjects.Mermaids.PurpleMermaid;
 import TowerDefense.GameObjects.Mermaids.RedMermaid;
 import TowerDefense.GameObjects.base.GameObject;
 import TowerDefense.GameObjects.base.InterfaceMenu;
-import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.Tower;
 
 public class BuildMenu extends GameObject implements InterfaceMenu {
     private Vector2 turrretPos;
@@ -27,7 +27,7 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
         this.turrretPos = turretPos;
         this.textureOffset = textureOffset;
 
-        this.currentTRegion = new TextureRegion(AssetsControl.getTexture("buildMenu"), 0, 0, (int)this.size.x, (int)this.size.y);
+        this.currentTRegion = new TextureRegion(AssetsManager.getTexture("buildMenu"), 0, 0, (int)this.size.x, (int)this.size.y);
     
         this.size.x *= 2;
         this.size.y *= 2;
@@ -45,7 +45,7 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
         return this.turrretPos;
     }
 
-    public Mermaid getMermaid() {
+    public Tower getMermaid() {
         switch (mermaidNumber) {
             case 0:
                 return new PinkMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));

@@ -19,14 +19,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.Cannons.Cannon;
 import TowerDefense.GameObjects.Interface.BuildMenu;
 import TowerDefense.GameObjects.Interface.Button;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.InterfaceMenu;
-import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.Tower;
 import TowerDefense.GameObjects.base.Wave;
 import TowerDefense.Map.Map;
 
@@ -37,11 +37,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class GameStage extends Stage {
 	protected Map mapGame;
-	protected AssetsControl assetsManager;
 	protected SpriteBatch batch;
 	protected BitmapFont font;
 
-	protected ArrayList<Mermaid> towers;
+	protected ArrayList<Tower> towers;
 	protected ArrayList<Enemy> enemies;
 
 	protected Sprite mousePosSprite;
@@ -50,9 +49,6 @@ public class GameStage extends Stage {
 	protected ShapeRenderer shapeRenderer;
 
 	protected Wave wave;
-
-	protected Texture gameTexture;
-	protected TextureRegion bulletTexture;
 
 	protected int textureOffset;
 
@@ -76,18 +72,12 @@ public class GameStage extends Stage {
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
 
-		assetsManager = new AssetsControl();
-		assetsManager.create();
-
-		towers = new ArrayList<Mermaid>();
+		towers = new ArrayList<Tower>();
 		enemies = new ArrayList<Enemy>();
 
 		textureOffset = 64;
-		gameTexture = new Texture(Gdx.files.internal("Asset.png"));
-		bulletTexture = new TextureRegion(gameTexture, textureOffset, textureOffset, textureOffset, textureOffset);
 
-		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, textureOffset, textureOffset,
-				textureOffset);
+		mousePosSprite = new Sprite(AssetsManager.getTexture("selectPos"));
 
 		skipWaveButton = new Button(900, 20, 50, 24);
 
@@ -144,7 +134,7 @@ public class GameStage extends Stage {
 
 	private void loadWave(String fileName) {
 		try {
-			FileReader file = new FileReader("./core/src/main/java/TowerDefense/Waves/" + fileName + "Difficulty"
+			FileReader file = new FileReader("../core/src/main/java/TowerDefense/Waves/" + fileName + "Difficulty"
 					+ this.levelDificulty + ".json");
 			BufferedReader buffer = new BufferedReader(file);
 			String jsonString = buffer.lines().collect(Collectors.joining());
@@ -182,7 +172,7 @@ public class GameStage extends Stage {
 
 			if (buildMode.getClass().getSimpleName().equals("BuildMenu")) {
 				BuildMenu menu = (BuildMenu) buildMode;
-				Mermaid mermaid = menu.getMermaid();
+				Tower mermaid = menu.getMermaid();
 				if (mermaid != null && mermaid.getPrice() <= this.coins) {
 					this.coins -= mermaid.getPrice();
 					towers.add(mermaid);
@@ -201,7 +191,7 @@ public class GameStage extends Stage {
 		}
 
 		// Procura por torreta ou espaço livre
-		for (Mermaid tower : towers) {
+		for (Tower tower : towers) {
 			// Comparação de Vector2 não funciona. Obrigado LIBGdx :thumbsup:
 			if (tower.getPosition().x == turretPos.x && tower.getPosition().y == turretPos.y) {
 				buildMode = new UpgradeMenu(tower);
@@ -237,8 +227,8 @@ public class GameStage extends Stage {
 		this.turretRangeCircle = null; // As funções providas pela classe screen não rodam direito pra limpar a
 										// variavel, tem que limpar ela aqui mesmo
 
-		for (Mermaid tower : towers) {
-			// D qm foi a ideia de girigo de colocar a posição do mouse e do sprite
+		for (Tower tower : towers) {
+			// D qm foi a ideia de girico de colocar a posição do mouse e do sprite
 			// diferente, em LIBGDX?????
 			// Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
 			if (mousePos.x == tower.getPosition().x
@@ -254,7 +244,7 @@ public class GameStage extends Stage {
 	public void act(float delta) {
 		super.act(delta);
 
-		for (Mermaid tower : towers) {
+		for (Tower tower : towers) {
 			tower.setCurrentTarget(null);
 			for (Enemy enemy : enemies) { // Responsavel por pegar o primeiro inimigo gerado
 				if (tower.inRange(enemy.getPosition())) {
@@ -278,13 +268,11 @@ public class GameStage extends Stage {
 			}
 		}
 
-		for (Mermaid tower : towers) {
+		for (Tower tower : towers) {
 			tower.update(delta);
 		}
 
 		wave.update(delta);
-
-		assetsManager.update(delta);
 	}
 
 	@Override
@@ -301,15 +289,13 @@ public class GameStage extends Stage {
 			font.draw(batch, "Coins: " + coins, 10, Gdx.graphics.getHeight() - 20);
 			mousePosSprite.draw(batch);
 
-			for (Mermaid tower : towers) {
-				tower.draw(bulletTexture, batch);
+			for (Tower tower : towers) {
+				tower.draw(batch);
 			}
 
 			for (Enemy enemy : enemies) {
 				enemy.draw(batch);
 			}
-
-			assetsManager.render();
 
 			if (buildMode != null) {
 				buildMode.draw(batch);
@@ -317,10 +303,12 @@ public class GameStage extends Stage {
 		}
 		batch.end();
 
-		shapeRenderer.begin(ShapeType.Line);
-		if (turretRangeCircle != null) {
-			shapeRenderer.setColor(Color.WHITE);
-			shapeRenderer.circle(turretRangeCircle.x, turretRangeCircle.y, turretRangeCircle.radius);
+		shapeRenderer.begin(ShapeType.Line);	
+		{
+			if (turretRangeCircle != null) {
+				shapeRenderer.setColor(Color.WHITE);
+				shapeRenderer.circle(turretRangeCircle.x, turretRangeCircle.y, turretRangeCircle.radius);
+			}
 		}
 		shapeRenderer.end();
 
@@ -346,8 +334,7 @@ public class GameStage extends Stage {
 
 	// PODEMOS POR FAVOR NUNCA USAR ISSO DAQUI? AGRADECIDO
 	// Agradecido fico eu. :)
-	public void resize(int height, int width) {
-		/* pass */}
+	public void resize(int height, int width) { /* pass */}
 
 	public Map getMapGame() {
 		return mapGame;

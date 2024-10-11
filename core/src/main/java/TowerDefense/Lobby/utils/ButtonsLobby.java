@@ -7,7 +7,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 
 public class ButtonsLobby {
 
@@ -18,7 +18,7 @@ public class ButtonsLobby {
 	private TextureRegion buttonTexture;
 	private Rectangle baseButton;
 	private final static HashMap<String, TextureRegion> texturesButtons = loadButton(
-			AssetsControl.getTextureRegions("buttonsLobby"));
+			AssetsManager.getTextureRegions("buttonsLobby"));
 
 	public ButtonsLobby(String typeButton, int x, int y, int width, int height) {
 		this.setX(x);
@@ -80,7 +80,7 @@ public class ButtonsLobby {
 		HashMap<String, TextureRegion> buttons = new HashMap<String, TextureRegion>();
 
 		try {
-			FileReader file = new FileReader("./assets/Lobby/buttons_coords_size.txt");
+			FileReader file = new FileReader("Lobby/buttons_coords_size.txt");
 			BufferedReader in = new BufferedReader(file);
 			String line = in.readLine();
 			while (line != null) {

@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 
 import java.util.ArrayList;
 
-public abstract class Mermaid extends GameObject {
+public abstract class Tower extends GameObject {
     protected int price; // Moedas
     protected float range;
     protected float bulletSpeed; // Frames/Second
@@ -23,15 +23,23 @@ public abstract class Mermaid extends GameObject {
     protected int mermaidType = 0; // Usado para pegar a textura certa
     protected int sumUpgrades = 0;
 
+    TextureRegion bulletTexture;
+
     protected ArrayList<Bullet> bullets;
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
     // torre pode ter duas+ balas ao mesmo tempo, pra evitar dor de cebeça no
     // futuro, utiliza-se um array
 
-    public Mermaid(Vector2 position, Vector2 size) {
+    public Tower(Vector2 position, Vector2 size, int power) {
         super(position, size);
         this.bulletSpeed = 250.f;
         this.bullets = new ArrayList<Bullet>();
+
+        bulletTexture = new TextureRegion(AssetsManager.getTexture("towersPower"), power * 64, 0, 64, 64);
+    }
+
+    public Tower(Vector2 position, Vector2 size) {
+        this(position, size, 0);
     }
 
     public float getRange() {
@@ -79,10 +87,10 @@ public abstract class Mermaid extends GameObject {
 
         if(currenteTarget != null && mermaidType % 2 == 0) {
             mermaidType += 1;
-            this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
+            this.animation = AssetsManager.getAnimation(textureRegions, mermaidType, 0.15f);
         } else if(currenteTarget == null && mermaidType % 2 == 1) {
             mermaidType -= 1;
-            this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
+            this.animation = AssetsManager.getAnimation(textureRegions, mermaidType, 0.15f);
         }
 
         for (int i = 0; i < bullets.size(); i++) {
@@ -95,11 +103,13 @@ public abstract class Mermaid extends GameObject {
         }
     }
 
-    public void draw(TextureRegion tRegionBullets, SpriteBatch batch) {
-        super.draw(batch);
+    @Override
+    public void draw(SpriteBatch batch) {
+        batch.draw(currentTRegion, this.position.x - 17, this.position.y, (int)(this.size.x * 1.45), (int)(this.size.y * 1.45));
+
 
         for (Bullet bullet : bullets) {
-            bullet.currentTRegion = tRegionBullets;
+            bullet.currentTRegion = this.bulletTexture;
             bullet.draw(batch);
         }
     }
@@ -172,7 +182,9 @@ public abstract class Mermaid extends GameObject {
 
         this.level += 1;
         this.mermaidType += 2;
-        this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f); 
+        this.animation = AssetsManager.getAnimation(textureRegions, mermaidType, 0.15f); 
+    
+        bulletTexture = new TextureRegion(AssetsManager.getTexture("towersPower"), (this.level - 1) * 64, 0, 64, 64);
     }
 
     public ArrayList<Bullet> getBullets(){

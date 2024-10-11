@@ -2,33 +2,32 @@ package TowerDefense.GameObjects.Cannons;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.AssetsManager.AssetsManager;
 import TowerDefense.GameObjects.base.Bullet;
 import TowerDefense.GameObjects.base.Enemy;
-import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.Tower;
 
-public class Cannon extends Mermaid {
+public class Cannon extends Tower {
 
     protected ArrayList<Enemy> enemies;
-    protected int bulletRange;
+    protected float bulletRange;
 
     public Cannon(Vector2 position, Vector2 size) {
-        super(new Vector2(position), new Vector2(80, 80));
-        super.damage = 0.8f;
+        super(new Vector2(position), new Vector2(80, 80), 3);
+        super.damage = 1.f;
         super.range = 2;
         super.bulletDelay = 2.f;
         super.price = 250;
-        this.bulletRange = 64;
+        this.bulletRange = 1.5f * this.size.x;
 
-        textureRegions = AssetsControl.getTextureRegions("cannon", this.size);
-        animation = AssetsControl.getAnimation(textureRegions, 0, 0.8f);
+        this.textureRegions = AssetsManager.getTextureRegions("cannon", this.size);
+        this.animation = AssetsManager.getAnimation(textureRegions, 0, 0.8f);
         this.currentTRegion = textureRegions[0][0];
 
         this.enemies = new ArrayList<Enemy>();
-
+        
         this.size.x = size.x;
         this.size.y = size.y;
     }
@@ -43,17 +42,12 @@ public class Cannon extends Mermaid {
         }
     }
 
-    @Override 
-    public void draw(SpriteBatch batch) {
-        batch.draw(currentTRegion, this.position.x, this.position.y, (int)(this.size.x), (int)(this.size.y));
-    }
-
     @Override
     public void update(float deltaTime) {
         if (currenteTarget != null) {
             shoot(deltaTime);
 
-            this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
+            this.currentTRegion = AssetsManager.getCurrentTRegion(animation);
             
         } else if(this.currentTRegion == textureRegions[level - 1][1]){
             this.currentTRegion = textureRegions[level - 1][0];
@@ -66,6 +60,9 @@ public class Cannon extends Mermaid {
                 for(Enemy enemy : enemies) {
                      enemy.damage(this.damage);
                 }
+
+                currenteTarget.damage(this.damage); // O inimigo que está na mira recebe mais dano
+
                 bullets.remove(i);
             }
         }
@@ -78,7 +75,7 @@ public class Cannon extends Mermaid {
         }
 
         this.level += 1;
-        this.animation = AssetsControl.getAnimation(textureRegions, (this.level - 1), 0.8f);
+        this.animation = AssetsManager.getAnimation(textureRegions, (this.level - 1), 0.8f);
         this.currentTRegion = textureRegions[level - 1][0];
     }
 }
