@@ -17,7 +17,7 @@ public class Cannon extends Mermaid {
 
     public Cannon(Vector2 position, Vector2 size) {
         super(new Vector2(position), new Vector2(80, 80));
-        super.damage = 0.8f;
+        super.damage = 6f;
         super.range = 2;
         super.bulletDelay = 2.f;
         super.price = 250;
@@ -36,16 +36,17 @@ public class Cannon extends Mermaid {
     public void setEnemies(ArrayList<Enemy> e) {
         this.enemies.clear();
 
-        for(Enemy enemy : e) {
-            if(Math.sqrt( Math.pow(currenteTarget.getPosition().x - enemy.getPosition().x, 2) + Math.pow(currenteTarget.getPosition().y - enemy.getPosition().y, 2)) <= this.bulletRange) {
+        for (Enemy enemy : e) {
+            if (Math.sqrt(Math.pow(currenteTarget.getPosition().x - enemy.getPosition().x, 2)
+                    + Math.pow(currenteTarget.getPosition().y - enemy.getPosition().y, 2)) <= this.bulletRange) {
                 this.enemies.add(enemy);
             }
         }
     }
 
-    @Override 
+    @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(currentTRegion, this.position.x, this.position.y, (int)(this.size.x), (int)(this.size.y));
+        batch.draw(currentTRegion, this.position.x, this.position.y, (int) (this.size.x), (int) (this.size.y));
     }
 
     @Override
@@ -54,8 +55,8 @@ public class Cannon extends Mermaid {
             shoot(deltaTime);
 
             this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
-            
-        } else if(this.currentTRegion == textureRegions[level - 1][1]){
+
+        } else if (this.currentTRegion == textureRegions[level - 1][1]) {
             this.currentTRegion = textureRegions[level - 1][0];
         }
 
@@ -63,8 +64,8 @@ public class Cannon extends Mermaid {
             Bullet bullet = bullets.get(i);
             bullet.update(deltaTime);
             if (bullet.hit()) {
-                for(Enemy enemy : enemies) {
-                     enemy.damage(this.damage);
+                for (Enemy enemy : enemies) {
+                    enemy.damage(this.damage);
                 }
                 bullets.remove(i);
             }
@@ -73,7 +74,7 @@ public class Cannon extends Mermaid {
 
     @Override
     protected void levelUp() {
-        if(sumUpgrades < this.level * 3 ){
+        if (sumUpgrades < this.level * 3) {
             return;
         }
 

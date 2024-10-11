@@ -8,7 +8,7 @@ import TowerDefense.GameObjects.base.Mermaid;
 public class PinkMermaid extends Mermaid {
     public PinkMermaid(Vector2 position, Vector2 size) {
         super(position, size);
-        super.damage = 1.f;
+        super.damage = 5.f;
         super.range = 2;
         super.bulletDelay = 1.f;
         super.price = 50;

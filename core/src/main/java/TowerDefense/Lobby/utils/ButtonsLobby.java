@@ -97,6 +97,7 @@ public class ButtonsLobby {
 
 				line = in.readLine();
 			}
+			in.close();
 		} catch (Exception e) {
 			System.out.println("Erro : " + e.getMessage());
 		}
