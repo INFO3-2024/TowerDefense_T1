@@ -39,7 +39,7 @@ public class Boss extends Enemy {
 
         if (timeSinceLastWave >= 8) {
             if (spawnedEnemies <= 3 && timeSinceLastWave >= 8 + 0.5f * spawnedEnemies) {
-                enimiesArray.add(0, new Pirate(super.size, this.originalWayPoints));
+                enimiesArray.add(new Pirate(super.size, this.originalWayPoints));
                 spawnedEnemies += 1;
             }
             if (spawnedEnemies >= 3) {

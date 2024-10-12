@@ -263,16 +263,23 @@ public class GameStage extends Stage {
 
 		for (Mermaid tower : towers) {
 			tower.setCurrentTarget(null);
-			for (Enemy enemy : enemies) { // Responsavel por pegar o primeiro inimigo gerado
+			ArrayList<Enemy> enemiesInRange = new ArrayList<Enemy>();
+			for (Enemy enemy : enemies) {
 				if (tower.inRange(enemy.getPosition())) {
-					tower.setCurrentTarget(enemy);
-
-					if (tower instanceof Cannon) {
-						((Cannon) tower).setEnemies(this.enemies);
-					}
-
-					break;
+					enemiesInRange.add(enemy);
 				}
+			}
+			if (!enemiesInRange.isEmpty()) {
+				Enemy farthest = enemiesInRange.get(0);
+				for (Enemy enemy : enemiesInRange) {
+					if (farthest.getDistanceWalked() < enemy.getDistanceWalked()) {
+						farthest = enemy;
+					}
+				}
+				tower.setCurrentTarget(farthest);
+			}
+			if (tower instanceof Cannon) {
+				((Cannon) tower).setEnemies(this.enemies);
 			}
 		}
 

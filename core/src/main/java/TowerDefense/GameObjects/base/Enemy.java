@@ -14,6 +14,7 @@ public abstract class Enemy extends GameObject {
     protected Queue<Vector2> wayPoints;
     protected boolean fullPath = false;
     protected int dropedCoins;
+    protected float distanceWalked;
 
     public Enemy(Vector2 size, Queue<Vector2> wayPoints) {
         super(new Vector2(wayPoints.first().x, wayPoints.first().y), size);
@@ -50,6 +51,9 @@ public abstract class Enemy extends GameObject {
         this.position.x += this.velocity * deltaTime * Math.signum(diffToNextVector.x);
         this.position.y += this.velocity * deltaTime * Math.signum(diffToNextVector.y);
 
+        this.distanceWalked += this.velocity * deltaTime * Math.signum(diffToNextVector.x)
+                + this.velocity * deltaTime * Math.signum(diffToNextVector.y);
+
         if (Math.signum(diffToNextVector.x) * this.position.x > Math.signum(diffToNextVector.x) * nextVector.x) {
             float leftOverDistance = Math.abs(this.position.x - nextVector.x);
             this.position.x = nextVector.x;
@@ -58,7 +62,6 @@ public abstract class Enemy extends GameObject {
                 return;
             }
             this.position.y += Math.signum(this.wayPoints.last().y - this.position.y) * leftOverDistance;
-
         }
 
         if (Math.signum(diffToNextVector.y) * this.position.y > Math.signum(diffToNextVector.y) * nextVector.y) {
@@ -96,6 +99,10 @@ public abstract class Enemy extends GameObject {
 
     public float getLife() {
         return this.life;
+    }
+
+    public float getDistanceWalked() {
+        return this.distanceWalked;
     }
 
     public void drawLifeBar(ShapeRenderer render) {
