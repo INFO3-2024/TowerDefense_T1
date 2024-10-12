@@ -89,9 +89,6 @@ public abstract class Mermaid extends GameObject {
 
         if (currenteTarget != null) {
             shoot(deltaTime);
-            if (powerUp != null) {
-                this.powerUp.use();
-            }
         }
 
         if (currenteTarget != null && mermaidType % 2 == 0) {
@@ -113,9 +110,6 @@ public abstract class Mermaid extends GameObject {
     }
 
     public void draw(SpriteBatch batch) {
-        if (powerUp != null) {
-            this.powerUp.draw(batch);
-        }
         super.draw(batch);
 
         for (Bullet bullet : bullets) {
@@ -124,12 +118,19 @@ public abstract class Mermaid extends GameObject {
                     64, 64);
             bullet.draw(batch);
         }
+        if (powerUp != null) {
+            this.powerUp.draw(batch);
+        }
     }
 
     public void drawPowerUpLoading(ShapeRenderer shape) {
         if (powerUp != null) {
             powerUp.drawPowerUpLoading(this.position, new Vector2(this.size.x, 2), shape);
         }
+    }
+
+    public float getDamage() {
+        return this.damage;
     }
 
     // Upgrade functions
@@ -143,6 +144,12 @@ public abstract class Mermaid extends GameObject {
 
     public int getBulletSpeedUpgradePrice() {
         return (this.upgrades[0]) * 50;
+    }
+
+    public boolean canUpgrade() {
+        if (sumUpgrades >= 9 || level >= 3)
+            return false;
+        return true;
     }
 
     public boolean upgradeDamage() {
@@ -177,7 +184,6 @@ public abstract class Mermaid extends GameObject {
         this.upgrades[0]++;
         this.sumUpgrades++;
         this.bulletSpeed = this.bulletSpeed * 1.2f;
-
         this.bulletDelay = this.bulletDelay * 0.9f;
 
         levelUp();

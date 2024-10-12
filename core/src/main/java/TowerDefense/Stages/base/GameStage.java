@@ -314,12 +314,12 @@ public class GameStage extends Stage {
 
 			mousePosSprite.draw(batch);
 
-			for (Mermaid tower : towers) {
-				tower.draw(batch);
-			}
-
 			for (Enemy enemy : enemies) {
 				enemy.draw(batch);
+			}
+
+			for (Mermaid tower : towers) {
+				tower.draw(batch);
 			}
 
 			assetsManager.render();
