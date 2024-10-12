@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
@@ -26,6 +25,7 @@ import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.PowerUp;
 import TowerDefense.GameObjects.base.UIElement;
 import TowerDefense.GameObjects.base.Wave;
 import TowerDefense.Map.Map;
@@ -51,7 +51,6 @@ public class GameStage extends Stage {
 	protected Wave wave;
 
 	protected Texture gameTexture;
-	protected TextureRegion bulletTexture;
 
 	protected int textureOffset;
 
@@ -85,7 +84,6 @@ public class GameStage extends Stage {
 
 		textureOffset = 64;
 		gameTexture = new Texture(Gdx.files.internal("Asset.png"));
-		bulletTexture = new TextureRegion(gameTexture, textureOffset, textureOffset, textureOffset, textureOffset);
 
 		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, textureOffset, textureOffset,
 				textureOffset);
@@ -162,8 +160,10 @@ public class GameStage extends Stage {
 			waves = new JsonReader().parse(jsonString).getChild("waves");
 
 			wave = new Wave(enemies, mapGame.getListPaths(), waves, this.textureOffset, timeBetweenWaves);
+
+			PowerUp.setEnemies(enemies);
 		} catch (Exception e) {
-			System.err.println("Arquivo de waves não encontrado!");
+			System.err.println("Problema ao carregar wave! Erro:" + e.getMessage());
 		}
 	}
 
@@ -174,7 +174,7 @@ public class GameStage extends Stage {
 
 		if (skipWaveButton.handleClick(new Vector2(pos.x, Gdx.graphics.getHeight() - pos.y)) && wave.waveConcluded()
 				&& !wave.ended()) {
-			this.coins += (int) 2 * wave.antecipateWave();
+			this.coins += wave.antecipateWave();
 			return;
 		}
 
@@ -277,9 +277,9 @@ public class GameStage extends Stage {
 					}
 				}
 				tower.setCurrentTarget(farthest);
-			}
-			if (tower instanceof Cannon) {
-				((Cannon) tower).setEnemies(this.enemies);
+				if (tower instanceof Cannon) {
+					((Cannon) tower).setEnemies(this.enemies);
+				}
 			}
 		}
 
@@ -295,9 +295,6 @@ public class GameStage extends Stage {
 		for (Mermaid tower : towers) {
 			tower.update(delta);
 		}
-
-		// Esse pedaço aqui ficou meio feinho, mas o update da wave tem q ocorrer entre
-		// esses checks
 
 		wave.update(delta);
 
@@ -318,7 +315,7 @@ public class GameStage extends Stage {
 			mousePosSprite.draw(batch);
 
 			for (Mermaid tower : towers) {
-				tower.draw(bulletTexture, batch);
+				tower.draw(batch);
 			}
 
 			for (Enemy enemy : enemies) {
@@ -351,6 +348,10 @@ public class GameStage extends Stage {
 
 		for (int i = enemies.size() - 1; i >= 0; i--) {
 			enemies.get(i).drawLifeBar(shapeRenderer);
+		}
+
+		for (Mermaid tower : towers) {
+			tower.drawPowerUpLoading(shapeRenderer);
 		}
 
 		if (wave.waveConcluded() && !wave.ended()) {

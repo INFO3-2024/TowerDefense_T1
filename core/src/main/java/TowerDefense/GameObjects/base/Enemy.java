@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy extends GameObject {
+    protected float originalVelocity;
     protected float velocity;
     protected float life;
     protected float maxLife;
@@ -15,6 +16,7 @@ public abstract class Enemy extends GameObject {
     protected boolean fullPath = false;
     protected int dropedCoins;
     protected float distanceWalked;
+    protected float[] badEffectTime = { 0.f, 0.f, 0.f, 0.f }; // ROSA, VERDE, VERMELHA, AZUL
 
     public Enemy(Vector2 size, Queue<Vector2> wayPoints) {
         super(new Vector2(wayPoints.first().x, wayPoints.first().y), size);
@@ -51,8 +53,8 @@ public abstract class Enemy extends GameObject {
         this.position.x += this.velocity * deltaTime * Math.signum(diffToNextVector.x);
         this.position.y += this.velocity * deltaTime * Math.signum(diffToNextVector.y);
 
-        this.distanceWalked += this.velocity * deltaTime * Math.signum(diffToNextVector.x)
-                + this.velocity * deltaTime * Math.signum(diffToNextVector.y);
+        this.distanceWalked += (float) Math.abs(this.velocity * deltaTime * Math.signum(diffToNextVector.x))
+                + (float) Math.abs(this.velocity * deltaTime * Math.signum(diffToNextVector.y));
 
         if (Math.signum(diffToNextVector.x) * this.position.x > Math.signum(diffToNextVector.x) * nextVector.x) {
             float leftOverDistance = Math.abs(this.position.x - nextVector.x);
@@ -89,6 +91,10 @@ public abstract class Enemy extends GameObject {
         return this.velocity;
     }
 
+    public float getOriginalvelocity() {
+        return this.originalVelocity;
+    }
+
     public void setVelocity(float vel) {
         this.velocity = vel;
     }
@@ -123,12 +129,47 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void update(float deltaTime) {
+        for (int i = 0; i < badEffectTime.length; i++) {
+            badEffectTime[i] += deltaTime;
+        }
         super.update(deltaTime);
         this.move(deltaTime);
         this.powerUp(deltaTime);
     }
 
     public void powerUp(float deltaTime) {
+    }
+
+    public void pinkTowerDebuffReset() {
+        this.badEffectTime[0] = 0.f;
+    }
+
+    public void greenTowerDebuffReset() {
+        this.badEffectTime[1] = 0.f;
+    }
+
+    public void redTowerDebuffReset() {
+        this.badEffectTime[2] = 0.f;
+    }
+
+    public void blueTowerDebuffReset() {
+        this.badEffectTime[3] = 0.f;
+    }
+
+    public float getPinkTowerDebuff() {
+        return this.badEffectTime[0];
+    }
+
+    public float getGreenTowerDebuff() {
+        return this.badEffectTime[1];
+    }
+
+    public float getRedTowerDebuff() {
+        return this.badEffectTime[2];
+    }
+
+    public float getBlueTowerDebuff() {
+        return this.badEffectTime[3];
     }
 
     @Override

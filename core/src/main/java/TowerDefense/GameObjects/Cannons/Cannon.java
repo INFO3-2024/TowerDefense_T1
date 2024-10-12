@@ -2,7 +2,10 @@ package TowerDefense.GameObjects.Cannons;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import TowerDefense.AssetsManager.AssetsControl;
@@ -47,17 +50,24 @@ public class Cannon extends Mermaid {
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(currentTRegion, this.position.x, this.position.y, (int) (this.size.x), (int) (this.size.y));
+        for (Bullet bullet : bullets) {
+            bullet.setTexture(new TextureRegion(new Texture(Gdx.files.internal("Mermaids/Power.png")),
+                    3 * 64, 0,
+                    64, 64));
+            bullet.draw(batch);
+        }
     }
 
     @Override
     public void update(float deltaTime) {
         if (currenteTarget != null) {
             shoot(deltaTime);
+        }
 
-            this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
-
-        } else if (this.currentTRegion == textureRegions[level - 1][1]) {
+        if (this.timeFromLastBullet > 1 || currenteTarget == null) {
             this.currentTRegion = textureRegions[level - 1][0];
+        } else {
+            this.currentTRegion = textureRegions[level - 1][1];
         }
 
         for (int i = 0; i < bullets.size(); i++) {

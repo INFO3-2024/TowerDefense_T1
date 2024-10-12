@@ -104,11 +104,11 @@ public class Wave {
         return false;
     }
 
-    public float antecipateWave() {
+    public int antecipateWave() {
         if (enemiesToBeAdded.empty() && this.jWaves.next() != null) {
             this.jWaves = this.jWaves.next();
             this.loadEnemies();
-            return this.waveDelay - this.timeSinceLastSpawn;
+            return (int) (this.waveDelay - this.timeSinceLastSpawn) * 2 + 50;
         }
         return 0;
     }

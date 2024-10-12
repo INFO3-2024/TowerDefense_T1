@@ -13,17 +13,18 @@ public abstract class GameObject {
     protected TextureRegion[][] textureRegions;
     protected Animation<TextureRegion> animation;
     protected TextureRegion currentTRegion;
-    
+
     public GameObject(Vector2 position, Vector2 size) {
         this.position = position;
         this.size = size;
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(currentTRegion, this.position.x - 17, this.position.y, (int)(this.size.x * 1.45), (int)(this.size.y * 1.45));
+        batch.draw(currentTRegion, this.position.x - 17, this.position.y, (int) (this.size.x * 1.45),
+                (int) (this.size.y * 1.45));
     }
 
-    public void update(float deltaTime){
+    public void update(float deltaTime) {
         this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
     }
 

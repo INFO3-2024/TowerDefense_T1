@@ -1,7 +1,10 @@
 package TowerDefense.GameObjects.base;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import TowerDefense.AssetsManager.AssetsControl;
@@ -19,7 +22,7 @@ public abstract class Mermaid extends GameObject {
     protected float damage;
 
     protected int level = 1;
-    protected int[] upgrades = {0, 0, 0};
+    protected int[] upgrades = { 0, 0, 0 };
     protected int mermaidType = 0; // Usado para pegar a textura certa
     protected int sumUpgrades = 0;
 
@@ -27,6 +30,8 @@ public abstract class Mermaid extends GameObject {
     // Motivo de ser um ArrayList é que em alguns casos, muito especificos, uma
     // torre pode ter duas+ balas ao mesmo tempo, pra evitar dor de cebeça no
     // futuro, utiliza-se um array
+
+    protected PowerUp powerUp;
 
     public Mermaid(Vector2 position, Vector2 size) {
         super(position, size);
@@ -68,19 +73,31 @@ public abstract class Mermaid extends GameObject {
         timeFromLastBullet += deltaTime;
     }
 
+    public boolean canShoot() {
+        if (this.currenteTarget == null) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        
-        if (currenteTarget != null) {
-            shoot(deltaTime);
-
+        if (powerUp != null) {
+            this.powerUp.update(deltaTime);
         }
 
-        if(currenteTarget != null && mermaidType % 2 == 0) {
+        if (currenteTarget != null) {
+            shoot(deltaTime);
+            if (powerUp != null) {
+                this.powerUp.use();
+            }
+        }
+
+        if (currenteTarget != null && mermaidType % 2 == 0) {
             mermaidType += 1;
             this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
-        } else if(currenteTarget == null && mermaidType % 2 == 1) {
+        } else if (currenteTarget == null && mermaidType % 2 == 1) {
             mermaidType -= 1;
             this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
         }
@@ -95,31 +112,41 @@ public abstract class Mermaid extends GameObject {
         }
     }
 
-    public void draw(TextureRegion tRegionBullets, SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
+        if (powerUp != null) {
+            this.powerUp.draw(batch);
+        }
         super.draw(batch);
 
         for (Bullet bullet : bullets) {
-            bullet.currentTRegion = tRegionBullets;
+            bullet.currentTRegion = new TextureRegion(new Texture(Gdx.files.internal("Mermaids/Power.png")),
+                    (level - 1) * 64, 0,
+                    64, 64);
             bullet.draw(batch);
+        }
+    }
+
+    public void drawPowerUpLoading(ShapeRenderer shape) {
+        if (powerUp != null) {
+            powerUp.drawPowerUpLoading(this.position, new Vector2(this.size.x, 2), shape);
         }
     }
 
     // Upgrade functions
     public int getDamageUpgradePrice() {
-        return (this.upgrades[2] + 1) * 3;
+        return (this.upgrades[2]) * 50;
     }
 
     public int getRangeUpgradePrice() {
-        return (this.upgrades[1] + 1) * 1;
+        return (this.upgrades[1]) * 50;
     }
 
     public int getBulletSpeedUpgradePrice() {
-
-        return (this.upgrades[0] + 1) * 2;
+        return (this.upgrades[0]) * 50;
     }
 
     public boolean upgradeDamage() {
-        if(sumUpgrades >= 9 || level >= 3) 
+        if (sumUpgrades >= 9 || level >= 3)
             return false;
 
         this.upgrades[2]++;
@@ -132,7 +159,7 @@ public abstract class Mermaid extends GameObject {
     }
 
     public boolean upgradeRange() {
-        if(sumUpgrades >= 9 || level >= 3) 
+        if (sumUpgrades >= 9 || level >= 3)
             return false;
 
         this.upgrades[1]++;
@@ -144,7 +171,7 @@ public abstract class Mermaid extends GameObject {
     }
 
     public boolean upgradeBulletSpeed() {
-        if(sumUpgrades >= 9 || level >= 3) 
+        if (sumUpgrades >= 9 || level >= 3)
             return false;
 
         this.upgrades[0]++;
@@ -163,22 +190,28 @@ public abstract class Mermaid extends GameObject {
     }
 
     protected void levelUp() {
-        if(sumUpgrades < this.level * 3 ){
+        if (sumUpgrades < this.level * 3) {
             return;
         }
 
-        // Sim, cada nivel que ela aumenta tem que aumentar 2 aqui 
+        // Sim, cada nivel que ela aumenta tem que aumentar 2 aqui
         // se eu fiz assim é pq é assim.
 
         this.level += 1;
         this.mermaidType += 2;
-        this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f); 
+        this.animation = AssetsControl.getAnimation(textureRegions, mermaidType, 0.15f);
+        if (this.level >= 3) {
+            this.addPowerUp();
+        }
     }
 
-    public ArrayList<Bullet> getBullets(){
+    public void addPowerUp() {
+    }
+
+    public ArrayList<Bullet> getBullets() {
         return this.bullets;
     }
-    
+
     @Override
     public void dispose() {
         /* Nothing to dipose also */

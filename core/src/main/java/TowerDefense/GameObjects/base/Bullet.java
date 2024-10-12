@@ -1,5 +1,6 @@
 package TowerDefense.GameObjects.base;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bullet extends GameObject {
@@ -16,6 +17,13 @@ public class Bullet extends GameObject {
     public Bullet(Vector2 position, Vector2 size, float bulletSpeed, float angle, float timeUntilImpact,
             Enemy bulletTarget) {
         super(position, size);
+        // Então... Odeio essas proximas duas linhas de codigo, porém a gameObject ta
+        // fixado em um valor lá pra resolver alguma gambiarra acho eu, não foi eu q
+        // fiz, não sei o que resolve, não quebrarei codigo alheio...
+        // Como arrumar a posição da bala então? vc me pergunta?! Segue as duas
+        // atrocidades que chamei de codigo abaixo
+        this.position.x += 8;
+        this.position.y -= 20;
         this.bulletSpeed = bulletSpeed;
         this.angle = angle;
         this.timeUntilImpact = timeUntilImpact;
@@ -28,6 +36,10 @@ public class Bullet extends GameObject {
 
     public Enemy getBulletTarget() {
         return this.bulletTarget;
+    }
+
+    public void setTexture(TextureRegion texture) {
+        this.currentTRegion = texture;
     }
 
     @Override

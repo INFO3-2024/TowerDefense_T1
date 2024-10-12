@@ -27,16 +27,17 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
         this.turrretPos = turretPos;
         this.textureOffset = textureOffset;
 
-        this.currentTRegion = new TextureRegion(AssetsControl.getTexture("buildMenu"), 0, 0, (int)this.size.x, (int)this.size.y);
-    
+        this.currentTRegion = new TextureRegion(AssetsControl.getTexture("buildMenu"), 0, 0, (int) this.size.x,
+                (int) this.size.y);
+
         this.size.x *= 2;
         this.size.y *= 2;
 
         // Para garantir que nunca seja desenhado fora da tela
-        if(this.position.x > Gdx.graphics.getWidth() - this.size.x){
+        if (this.position.x > Gdx.graphics.getWidth() - this.size.x) {
             this.position.x = Gdx.graphics.getWidth() - this.size.x;
         }
-        if(this.position.y > Gdx.graphics.getHeight() - this.size.y){
+        if (this.position.y > Gdx.graphics.getHeight() - this.size.y) {
             this.position.y = Gdx.graphics.getHeight() - this.size.y;
         }
     }
@@ -56,7 +57,7 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
             case 3:
                 return new GreenMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
             case 4:
-            return new BlueMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
+                return new BlueMermaid(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
             case 5:
                 return new Cannon(this.turrretPos, new Vector2(this.textureOffset, this.textureOffset));
             default:
@@ -66,10 +67,8 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
 
     public boolean handleClick(Vector2 mousePos) {
         for (int i = 0; i <= 5; i++) {
-            if(
-                (mousePos.x >= this.position.x + 32 + 58 * i && mousePos.x < this.position.x + 64 + 58 * i) &&
-                (mousePos.y >= this.position.y + 86 && mousePos.y < this.position.y + 150)
-            ){
+            if ((mousePos.x >= this.position.x + 32 + 58 * i && mousePos.x < this.position.x + 64 + 58 * i) &&
+                    (mousePos.y >= this.position.y && mousePos.y < this.position.y + 128)) {
                 mermaidNumber = i;
                 return true;
             }
@@ -77,15 +76,17 @@ public class BuildMenu extends GameObject implements InterfaceMenu {
         return false;
     }
 
-    public boolean handleMouseOver(Vector2 mousePos){
-        return handleClick(mousePos);
+    public boolean handleMouseOver(Vector2 mousePos) {
+        return false;
     }
 
     @Override
-    public void update(float deltaTime){/* pass */}
+    public void update(float deltaTime) {
+        /* pass */}
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(this.currentTRegion, (int)this.position.x , (int)this.position.y, (int)this.size.x, (int)this.size.y);
+        batch.draw(this.currentTRegion, (int) this.position.x, (int) this.position.y, (int) this.size.x,
+                (int) this.size.y);
     }
 }

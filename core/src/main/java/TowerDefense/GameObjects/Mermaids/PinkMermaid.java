@@ -3,6 +3,7 @@ package TowerDefense.GameObjects.Mermaids;
 import com.badlogic.gdx.math.Vector2;
 
 import TowerDefense.AssetsManager.AssetsControl;
+import TowerDefense.GameObjects.PowerUps.PinkPowerup;
 import TowerDefense.GameObjects.base.Mermaid;
 
 public class PinkMermaid extends Mermaid {
@@ -16,5 +17,10 @@ public class PinkMermaid extends Mermaid {
         textureRegions = AssetsControl.getTextureRegions("pinkMermaid");
         animation = AssetsControl.getAnimation(textureRegions, 0, 0.15f);
         this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
+    }
+
+    @Override
+    public void addPowerUp() {
+        this.powerUp = new PinkPowerup(this);
     }
 }

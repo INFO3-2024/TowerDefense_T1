@@ -12,7 +12,8 @@ public class ZombiePirate extends Enemy {
     public ZombiePirate(Vector2 size, Queue<Vector2> wayPoints) {
         super(size, wayPoints);
         super.dropedCoins = 15;
-        super.velocity = 60.f;
+        super.originalVelocity = 60.f;
+        super.velocity = originalVelocity;
         super.life = 30.f;
         super.maxLife = super.life;
 

@@ -16,7 +16,8 @@ public class Boss extends Enemy {
     public Boss(Vector2 size, Queue<Vector2> wayPoints, ArrayList<Enemy> enimiesArray) {
         super(size, wayPoints);
         super.dropedCoins = 30;
-        super.velocity = 20.f;
+        super.originalVelocity = 20.f;
+        super.velocity = originalVelocity;
         super.life = 300.f;
         super.maxLife = super.life;
         this.enimiesArray = enimiesArray;

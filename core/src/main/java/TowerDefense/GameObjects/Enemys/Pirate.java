@@ -11,7 +11,8 @@ public class Pirate extends Enemy {
         public Pirate(Vector2 size, Queue<Vector2> wayPoints) {
                 super(size, wayPoints);
                 super.dropedCoins = 10;
-                super.velocity = 60.f;
+                super.originalVelocity = 50.f;
+                super.velocity = originalVelocity;
                 super.life = 10.f;
                 super.maxLife = super.life;
 
