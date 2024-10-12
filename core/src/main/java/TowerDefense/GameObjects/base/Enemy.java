@@ -101,7 +101,7 @@ public abstract class Enemy extends GameObject {
     public void drawLifeBar(ShapeRenderer render) {
         render.begin(ShapeType.Filled);
         render.setColor(Color.BLACK);
-        render.rect(this.position.x, this.position.y - 3, this.size.x, 2);
+        render.rect(this.position.x - 1, this.position.y - 4, this.size.x + 2, 4);
         render.end();
 
         render.begin(ShapeType.Filled);

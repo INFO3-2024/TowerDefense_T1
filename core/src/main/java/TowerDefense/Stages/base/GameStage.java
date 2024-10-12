@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,6 +26,7 @@ import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.InterfaceMenu;
 import TowerDefense.GameObjects.base.Mermaid;
+import TowerDefense.GameObjects.base.UIElement;
 import TowerDefense.GameObjects.base.Wave;
 import TowerDefense.Map.Map;
 
@@ -39,7 +39,6 @@ public class GameStage extends Stage {
 	protected Map mapGame;
 	protected AssetsControl assetsManager;
 	protected SpriteBatch batch;
-	protected BitmapFont font;
 
 	protected ArrayList<Mermaid> towers;
 	protected ArrayList<Enemy> enemies;
@@ -58,7 +57,7 @@ public class GameStage extends Stage {
 
 	protected InterfaceMenu buildMode;
 
-	protected int coins = 999;
+	protected int coins;
 
 	protected JsonValue waves;
 
@@ -67,6 +66,9 @@ public class GameStage extends Stage {
 	private int stageLevel;
 	private int levelDificulty;
 
+	private UIElement coinsUIElement;
+	private UIElement pirateUiElement;
+
 	public GameStage(int stageLevel, int levelDificulty) {
 		mapGame = new Map(stageLevel);
 		this.stageLevel = stageLevel;
@@ -74,7 +76,6 @@ public class GameStage extends Stage {
 
 		batch = mapGame.getBatch();
 		shapeRenderer = new ShapeRenderer();
-		font = new BitmapFont();
 
 		assetsManager = new AssetsControl();
 		assetsManager.create();
@@ -92,6 +93,12 @@ public class GameStage extends Stage {
 		skipWaveButton = new Button(900, 20, 50, 24);
 
 		this.loadWave("Stage" + this.stageLevel);
+
+		coinsUIElement = new UIElement(new Vector2(16, 644), "UI/CoinsBackground.png");
+		coinsUIElement.setOffset(new Vector2(18, 4));
+
+		pirateUiElement = new UIElement(new Vector2(148, 644), "UI/PiratesBackground.png");
+		pirateUiElement.setOffset(new Vector2(32, 5));
 
 		Gdx.input.setInputProcessor(new InputProcessor() {
 			@Override
@@ -282,6 +289,9 @@ public class GameStage extends Stage {
 			tower.update(delta);
 		}
 
+		// Esse pedaço aqui ficou meio feinho, mas o update da wave tem q ocorrer entre
+		// esses checks
+
 		wave.update(delta);
 
 		assetsManager.update(delta);
@@ -298,7 +308,6 @@ public class GameStage extends Stage {
 		{
 			mapGame.draw();
 
-			font.draw(batch, "Coins: " + coins, 10, Gdx.graphics.getHeight() - 20);
 			mousePosSprite.draw(batch);
 
 			for (Mermaid tower : towers) {
@@ -315,6 +324,15 @@ public class GameStage extends Stage {
 				buildMode.draw(batch);
 			}
 		}
+
+		coinsUIElement.setValue(Integer.toString(this.coins));
+		coinsUIElement.draw(batch);
+
+		pirateUiElement.setValue(
+				(wave.doneSpawning() ? Integer.toString(Math.max(0, this.wave.getWaveSize() - this.enemies.size()))
+						: 0) + "/" + this.wave.getWaveSize());
+		pirateUiElement.draw(batch);
+
 		batch.end();
 
 		shapeRenderer.begin(ShapeType.Line);
@@ -324,8 +342,8 @@ public class GameStage extends Stage {
 		}
 		shapeRenderer.end();
 
-		for (Enemy enemy : enemies) {
-			enemy.drawLifeBar(shapeRenderer);
+		for (int i = enemies.size() - 1; i >= 0; i--) {
+			enemies.get(i).drawLifeBar(shapeRenderer);
 		}
 
 		if (wave.waveConcluded() && !wave.ended()) {
@@ -360,6 +378,5 @@ public class GameStage extends Stage {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		font.dispose();
 	}
 }

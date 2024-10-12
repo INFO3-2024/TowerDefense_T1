@@ -32,7 +32,6 @@ public class Map {
 			FileReader file = new FileReader("./lwjgl3/coords/map" + stage + ".coord");
 			BufferedReader buffer = new BufferedReader(file);
 			String lineFile = buffer.readLine();
-			buffer.close();
 
 			while (lineFile != null) {
 				lines.add(lineFile);
@@ -50,6 +49,7 @@ public class Map {
 				paths.add(path);
 			}
 
+			buffer.close();
 		} catch (Exception e) {
 			System.out.println("ERRO IN : " + e.getMessage());
 		}

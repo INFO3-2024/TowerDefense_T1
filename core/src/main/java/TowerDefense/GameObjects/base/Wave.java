@@ -25,6 +25,7 @@ public class Wave {
     private Stack<Enemy> enemiesToBeAdded;
     private JsonValue jWaves;
     private int textureOffset;
+    private int waveSize;
 
     public Wave(ArrayList<Enemy> enemies, ArrayList<Queue<Vector2>> enemyWay, JsonValue waves, int textureOffset,
             int timeBetweenWaves) {
@@ -64,6 +65,8 @@ public class Wave {
             enemiesToBeAdded.add(new Pirate(new Vector2(textureOffset, textureOffset),
                     enemyWay.get(path)));
         }
+
+        this.waveSize = this.enemiesToBeAdded.size();
     }
 
     public void update(float deltaTime) {
@@ -79,6 +82,14 @@ public class Wave {
         }
     }
 
+    public int getWaveSize() {
+        return this.waveSize;
+    }
+
+    public boolean doneSpawning() {
+        return this.enemiesToBeAdded.empty();
+    }
+
     public boolean waveConcluded() {
         if (enemiesToBeAdded.empty()) {
             return true;
@@ -88,7 +99,6 @@ public class Wave {
 
     public boolean ended() {
         if (this.jWaves.next() == null && this.enimiesArray.isEmpty()) {
-            System.out.println(this.jWaves);
             return true;
         }
         return false;

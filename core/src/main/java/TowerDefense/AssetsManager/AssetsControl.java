@@ -45,6 +45,8 @@ public class AssetsControl extends ApplicationAdapter {
         assetManager.load("Lobby/background.png", Texture.class);
         assetManager.load("Lobby/background_Levels.png", Texture.class);
 
+        assetManager.load("UI/CoinsBackground.png", Texture.class);
+
         // Espera que todos os assets sejam carregados
         assetManager.finishLoading();
 
@@ -62,8 +64,9 @@ public class AssetsControl extends ApplicationAdapter {
         textures.put("bubblesLobby", assetManager.get("Lobby/Bubbles.png", Texture.class));
         textures.put("background_Home", assetManager.get("Lobby/background.png", Texture.class));
         textures.put("background_Levels", assetManager.get("Lobby/background_Levels.png", Texture.class));
+        textures.put("coinsBackground", assetManager.get("UI/CoinsBackground.png", Texture.class));
 
-        sounds.put("musicLobby",  assetManager.get("Sound/NowWeAreFree(Gladiator).mp3", Music.class));
+        sounds.put("musicLobby", assetManager.get("Sound/NowWeAreFree(Gladiator).mp3", Music.class));
 
         stateTime = 0f;
     }
@@ -84,19 +87,20 @@ public class AssetsControl extends ApplicationAdapter {
 
     public static TextureRegion[][] getTextureRegions(String key, Vector2 size) {
         return TextureRegion.split(textures.get(key),
-            /*textures.get(key).getWidth() / 4*/ (int)size.x,
-            /*textures.get(key).getHeight() / 6*/(int)size.y);
+                /* textures.get(key).getWidth() / 4 */ (int) size.x,
+                /* textures.get(key).getHeight() / 6 */(int) size.y);
     }
 
     public static TextureRegion[][] getTextureRegions(String key) {
         return getTextureRegions(key, new Vector2(48, 48));
     }
 
-    public static Animation<TextureRegion> getAnimation(TextureRegion[][] textureRegion, int line, float frameDuration) {
+    public static Animation<TextureRegion> getAnimation(TextureRegion[][] textureRegion, int line,
+            float frameDuration) {
         return new Animation<TextureRegion>(frameDuration, textureRegion[line]);
     }
 
-    public static TextureRegion getCurrentTRegion(Animation<TextureRegion> animation){
+    public static TextureRegion getCurrentTRegion(Animation<TextureRegion> animation) {
         return animation.getKeyFrame(stateTime, true);
     }
 

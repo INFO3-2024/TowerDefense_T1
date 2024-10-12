@@ -27,8 +27,9 @@ public class PirateCaptain extends Enemy {
 
     @Override
     public void powerUp(float deltaTime) {
-        if (this.life < this.maxLife && shieldLife >= 0) {
+        if (this.life < this.maxLife && shieldLife > 0) {
             this.shieldLife -= this.maxLife - this.life;
+            this.shieldLife = Math.max(0, this.shieldLife);
             this.life = maxLife;
         }
     }
@@ -37,7 +38,7 @@ public class PirateCaptain extends Enemy {
     public void drawLifeBar(ShapeRenderer render) {
         render.begin(ShapeType.Filled);
         render.setColor(Color.BLACK);
-        render.rect(this.position.x, this.position.y - 3, this.size.x, 2);
+        render.rect(this.position.x - 1, this.position.y - 4, this.size.x + 2, 4);
         render.end();
 
         render.begin(ShapeType.Filled);
