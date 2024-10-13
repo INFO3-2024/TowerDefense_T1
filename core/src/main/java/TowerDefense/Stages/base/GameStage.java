@@ -89,7 +89,8 @@ public class GameStage extends Stage {
 		textureOffset = 64;
 		gameTexture = new Texture(Gdx.files.internal("Asset.png"));
 
-		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, textureOffset, textureOffset,
+		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Mermaids/SelectPos.png")), 0, 0,
+				textureOffset,
 				textureOffset);
 
 		this.loadWave("Stage" + this.stageLevel);
@@ -368,7 +369,7 @@ public class GameStage extends Stage {
 		heartElement.setValue(this.lifes + "/" + 3);
 		heartElement.draw(batch);
 
-		if (wave.waveConcluded() && !wave.ended()) {
+		if (wave.waveConcluded() && !wave.ended() && !wave.lastWave()) {
 			skipWaveButton.draw(batch);
 		}
 
