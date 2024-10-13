@@ -22,7 +22,7 @@ public class PirateCaptain extends Enemy {
         super.maxLife = super.life;
 
         textureRegions = AssetsControl.getTextureRegions("basicEnemy");
-        animation = AssetsControl.getAnimation(textureRegions, 4, 0.15f);
+        animation = AssetsControl.getAnimation(textureRegions, 8, 0.15f);
         this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
     }
 

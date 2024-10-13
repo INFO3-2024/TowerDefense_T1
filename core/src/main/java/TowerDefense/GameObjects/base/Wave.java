@@ -103,6 +103,13 @@ public class Wave {
         return false;
     }
 
+    public boolean lastWave() {
+        if (this.jWaves.next() == null) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean ended() {
         if (this.jWaves.next() == null && this.enimiesArray.isEmpty() && this.enemiesToBeAdded.isEmpty()) {
             return true;

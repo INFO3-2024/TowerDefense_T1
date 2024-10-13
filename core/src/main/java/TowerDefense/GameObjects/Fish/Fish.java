@@ -14,7 +14,6 @@ public class Fish {
     private TextureRegion fishTextureRegion;
     private float xPosition;
     private float yPosition;
-    private float speed; 
     private Random random;
     private List<Rectangle> fishRegions;
 
@@ -22,24 +21,24 @@ public class Fish {
         this.texture = texture;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
-        this.speed = speed;
-        this.random = new Random(); 
+        this.random = new Random();
         this.fishRegions = new ArrayList<>();
         inicializarPosicoes();
-    
+
         // Sorteia uma região logo no início para inicializar fishTextureRegion
         this.fishTextureRegion = sortearPosicao();
-    
+
         // Agora que fishTextureRegion está inicializada, podemos sortear a altura
         this.yPosition = sortearAltura();
     }
-    
+
     // Inicializa as posições possíveis dos peixes na textura
-    private void inicializarPosicoes(){
-        // Adiciona várias regiões de peixe dentro da textura (exemplo de múltiplas posições)
-        fishRegions.add(new Rectangle(0, 0, 48, 48));   // Posição de um peixe na textura
-        fishRegions.add(new Rectangle(48, 0, 48, 48));  // Posição de outro peixe
-        fishRegions.add(new Rectangle(96, 0, 48, 48));  // Posição de mais um peixe
+    private void inicializarPosicoes() {
+        // Adiciona várias regiões de peixe dentro da textura (exemplo de múltiplas
+        // posições)
+        fishRegions.add(new Rectangle(0, 0, 48, 48)); // Posição de um peixe na textura
+        fishRegions.add(new Rectangle(48, 0, 48, 48)); // Posição de outro peixe
+        fishRegions.add(new Rectangle(96, 0, 48, 48)); // Posição de mais um peixe
         fishRegions.add(new Rectangle(48, 144, 48, 48)); // Mais uma posição
         fishRegions.add(new Rectangle(96, 144, 48, 48)); // Outra posição de peixe
         fishRegions.add(new Rectangle(0, 192, 48, 48)); // Outra posição de peixe
@@ -50,11 +49,11 @@ public class Fish {
     private TextureRegion sortearPosicao() {
         int index = random.nextInt(fishRegions.size()); // Sorteia um índice da lista
         Rectangle selectedRegion = fishRegions.get(index); // Obtém a região sorteada
-        return new TextureRegion(texture, 
-                                 (int) selectedRegion.x, 
-                                 (int) selectedRegion.y, 
-                                 (int) selectedRegion.width, 
-                                 (int) selectedRegion.height);
+        return new TextureRegion(texture,
+                (int) selectedRegion.x,
+                (int) selectedRegion.y,
+                (int) selectedRegion.width,
+                (int) selectedRegion.height);
     }
 
     // Método para obter a textura

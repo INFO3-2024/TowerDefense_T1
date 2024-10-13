@@ -23,7 +23,7 @@ public class Boss extends Enemy {
         this.enimiesArray = enimiesArray;
 
         textureRegions = AssetsControl.getTextureRegions("basicEnemy");
-        animation = AssetsControl.getAnimation(textureRegions, 3, 0.15f);
+        animation = AssetsControl.getAnimation(textureRegions, 6, 0.15f);
         this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
 
         this.originalWayPoints = new Queue<Vector2>();

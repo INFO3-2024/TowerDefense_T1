@@ -18,7 +18,7 @@ public class ZombiePirate extends Enemy {
         super.maxLife = super.life;
 
         textureRegions = AssetsControl.getTextureRegions("basicEnemy");
-        animation = AssetsControl.getAnimation(textureRegions, 1, 0.15f);
+        animation = AssetsControl.getAnimation(textureRegions, 2, 0.15f);
         this.currentTRegion = AssetsControl.getCurrentTRegion(animation);
     }
 
