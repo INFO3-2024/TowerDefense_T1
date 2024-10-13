@@ -65,7 +65,10 @@ public class GameStage extends Stage {
 	private UIElement coinsUIElement;
 	private UIElement pirateUiElement;
 	private UIElement waveUiElement;
-	protected UIElement skipWaveButton;
+	private UIElement skipWaveButton;
+	private UIElement heartElement;
+
+	private int lifes = 3;
 
 	private int maxWaves;
 
@@ -103,6 +106,9 @@ public class GameStage extends Stage {
 		skipWaveButton = new UIElement(new Vector2(900, 20), "UI/SkipButton.png");
 		skipWaveButton.setOffset(new Vector2(0, -4));
 		skipWaveButton.setValue("SKIP");
+
+		heartElement = new UIElement(new Vector2(850, 644), "UI/HeartsBackground.png");
+		heartElement.setOffset(new Vector2(20, 4));
 
 		Gdx.input.setInputProcessor(new InputProcessor() {
 			@Override
@@ -300,6 +306,11 @@ public class GameStage extends Stage {
 				coins += enemy.dropCoins();
 				enemies.remove(i);
 			}
+
+			if (enemy.getPassedState()) {
+				enemies.remove(i);
+				lifes--;
+			}
 		}
 
 		for (Mermaid tower : towers) {
@@ -309,6 +320,10 @@ public class GameStage extends Stage {
 		wave.update(delta);
 
 		assetsManager.update(delta);
+
+		if (lifes <= 0) {
+			System.out.println("PERDEU MANE,KKKKKK OTARIO, MUITO RUIIIMMMM!!!!");
+		}
 	}
 
 	@Override
@@ -349,6 +364,9 @@ public class GameStage extends Stage {
 
 		waveUiElement.setValue("ONDA " + this.wave.getWaveCount() + " / " + this.maxWaves);
 		waveUiElement.draw(batch);
+
+		heartElement.setValue(this.lifes + "/" + 3);
+		heartElement.draw(batch);
 
 		if (wave.waveConcluded() && !wave.ended()) {
 			skipWaveButton.draw(batch);

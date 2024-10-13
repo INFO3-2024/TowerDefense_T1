@@ -81,6 +81,10 @@ public abstract class Enemy extends GameObject {
         }
     }
 
+    public boolean getPassedState() {
+        return this.fullPath;
+    }
+
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(currentTRegion, this.position.x - 17, this.position.y - 14, (int) (this.size.x * 1.45),
