@@ -18,7 +18,7 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-        configuration.setTitle("Game");
+        configuration.setTitle("Atlantis Guardians");
         //// Vsync limits the frames per second to what your hardware can display, and
         //// helps eliminate
         //// screen tearing. This setting doesn't always work on Linux, so the line
@@ -38,7 +38,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(1024, 704);
         configuration.setResizable(false);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setWindowIcon("icon.png");
         return configuration;
     }
 }
