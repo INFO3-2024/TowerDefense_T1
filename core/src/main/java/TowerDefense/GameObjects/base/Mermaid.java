@@ -135,15 +135,15 @@ public abstract class Mermaid extends GameObject {
 
     // Upgrade functions
     public int getDamageUpgradePrice() {
-        return (this.upgrades[2]) * 50;
+        return (this.upgrades[2] + 1) * 50;
     }
 
     public int getRangeUpgradePrice() {
-        return (this.upgrades[1]) * 50;
+        return (this.upgrades[1] + 1) * 50;
     }
 
     public int getBulletSpeedUpgradePrice() {
-        return (this.upgrades[0]) * 50;
+        return (this.upgrades[0] + 1) * 50;
     }
 
     public boolean canUpgrade() {

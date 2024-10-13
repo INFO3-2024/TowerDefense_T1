@@ -1,5 +1,6 @@
 {
     "timeBetweenWaves": 15,
+    "maxWaves": 7,
     "waves": [{
         "pirates": 10,
         "pirateCaptain": 0,

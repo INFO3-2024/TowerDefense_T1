@@ -26,6 +26,7 @@ public class Wave {
     private JsonValue jWaves;
     private int textureOffset;
     private int waveSize;
+    private int waves = 0;
 
     public Wave(ArrayList<Enemy> enemies, ArrayList<Queue<Vector2>> enemyWay, JsonValue waves, int textureOffset,
             int timeBetweenWaves) {
@@ -40,6 +41,7 @@ public class Wave {
     }
 
     private void loadEnemies() {
+        this.waves++;
         int path = (new Random()).nextInt(enemyWay.size());
 
         for (int i = 0; i < jWaves.getInt("boss"); i++) {
@@ -90,6 +92,10 @@ public class Wave {
         return this.enemiesToBeAdded.empty();
     }
 
+    public int getWaveCount() {
+        return this.waves;
+    }
+
     public boolean waveConcluded() {
         if (enemiesToBeAdded.empty()) {
             return true;
@@ -98,7 +104,7 @@ public class Wave {
     }
 
     public boolean ended() {
-        if (this.jWaves.next() == null && this.enimiesArray.isEmpty()) {
+        if (this.jWaves.next() == null && this.enimiesArray.isEmpty() && this.enemiesToBeAdded.isEmpty()) {
             return true;
         }
         return false;

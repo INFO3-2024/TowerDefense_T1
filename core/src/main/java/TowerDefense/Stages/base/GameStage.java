@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import TowerDefense.AssetsManager.AssetsControl;
 import TowerDefense.GameObjects.Cannons.Cannon;
 import TowerDefense.GameObjects.Interface.BuildMenu;
-import TowerDefense.GameObjects.Interface.Button;
 import TowerDefense.GameObjects.Interface.UpgradeMenu;
 import TowerDefense.GameObjects.base.Enemy;
 import TowerDefense.GameObjects.base.InterfaceMenu;
@@ -60,13 +59,15 @@ public class GameStage extends Stage {
 
 	protected JsonValue waves;
 
-	protected Button skipWaveButton;
-
 	private int stageLevel;
 	private int levelDificulty;
 
 	private UIElement coinsUIElement;
 	private UIElement pirateUiElement;
+	private UIElement waveUiElement;
+	protected UIElement skipWaveButton;
+
+	private int maxWaves;
 
 	public GameStage(int stageLevel, int levelDificulty) {
 		mapGame = new Map(stageLevel);
@@ -88,8 +89,6 @@ public class GameStage extends Stage {
 		mousePosSprite = new Sprite(new Texture(Gdx.files.internal("Asset.png")), 0, textureOffset, textureOffset,
 				textureOffset);
 
-		skipWaveButton = new Button(900, 20, 50, 24);
-
 		this.loadWave("Stage" + this.stageLevel);
 
 		coinsUIElement = new UIElement(new Vector2(16, 644), "UI/CoinsBackground.png");
@@ -97,6 +96,13 @@ public class GameStage extends Stage {
 
 		pirateUiElement = new UIElement(new Vector2(148, 644), "UI/PiratesBackground.png");
 		pirateUiElement.setOffset(new Vector2(32, 5));
+
+		waveUiElement = new UIElement(new Vector2(422, 644), "UI/WaveBackground.png");
+		waveUiElement.setOffset(new Vector2(0, 5));
+
+		skipWaveButton = new UIElement(new Vector2(900, 20), "UI/SkipButton.png");
+		skipWaveButton.setOffset(new Vector2(0, -4));
+		skipWaveButton.setValue("SKIP");
 
 		Gdx.input.setInputProcessor(new InputProcessor() {
 			@Override
@@ -155,9 +161,13 @@ public class GameStage extends Stage {
 			String jsonString = buffer.lines().collect(Collectors.joining());
 			buffer.close();
 
-			int timeBetweenWaves = new JsonReader().parse(jsonString).getInt("timeBetweenWaves");
+			JsonValue json = new JsonReader().parse(jsonString);
 
-			waves = new JsonReader().parse(jsonString).getChild("waves");
+			int timeBetweenWaves = json.getInt("timeBetweenWaves");
+
+			maxWaves = json.getInt("maxWaves");
+
+			waves = json.getChild("waves");
 
 			wave = new Wave(enemies, mapGame.getListPaths(), waves, this.textureOffset, timeBetweenWaves);
 
@@ -337,6 +347,13 @@ public class GameStage extends Stage {
 						: 0) + "/" + this.wave.getWaveSize());
 		pirateUiElement.draw(batch);
 
+		waveUiElement.setValue("ONDA " + this.wave.getWaveCount() + " / " + this.maxWaves);
+		waveUiElement.draw(batch);
+
+		if (wave.waveConcluded() && !wave.ended()) {
+			skipWaveButton.draw(batch);
+		}
+
 		batch.end();
 
 		shapeRenderer.begin(ShapeType.Line);
@@ -354,9 +371,6 @@ public class GameStage extends Stage {
 			tower.drawPowerUpLoading(shapeRenderer);
 		}
 
-		if (wave.waveConcluded() && !wave.ended()) {
-			skipWaveButton.draw(shapeRenderer);
-		}
 	}
 
 	public int updateKey(int keyGame) {
