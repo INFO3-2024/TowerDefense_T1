@@ -280,7 +280,6 @@ public class GameStage extends Stage {
 	}
 
 	protected void onRightMouseDown(Vector2 pos) {
-		System.out.println("CLICOU DIREITO EM");
 	}
 
 	public void setMusic(boolean isPlay){
@@ -321,9 +320,6 @@ public class GameStage extends Stage {
 										// variavel, tem que limpar ela aqui mesmo
 
 		for (Mermaid tower : towers) {
-			// D qm foi a ideia de girigo de colocar a posição do mouse e do sprite
-			// diferente, em LIBGDX?????
-			// Olha esse codigo, que coisa horrorosa, e nem é pq ta em JAVA
 			if (mousePos.x == tower.getPosition().x
 					&& Gdx.graphics.getHeight() - mousePos.y - textureOffset == tower.getPosition().y) {
 				this.turretRangeCircle = new Circle(mousePos.x + textureOffset / 2,

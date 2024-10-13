@@ -34,12 +34,6 @@ public abstract class Enemy extends GameObject {
     }
 
     private void move(float deltaTime) {
-        /*
-         * OK, HÁ UMA SÉRIE DE PROBLEMAS AQUI, TAMBÉM ME DÓI, JURO QUE ISSO É
-         * TEMPORÁRIO (OU NÃO RSRS
-         * - Rlx, vou fazer ser temporario
-         */
-
         if (this.wayPoints.isEmpty()) {
             this.fullPath = true;
             return;
@@ -47,8 +41,6 @@ public abstract class Enemy extends GameObject {
 
         Vector2 nextVector = this.wayPoints.last();
         Vector2 diffToNextVector = new Vector2(nextVector.x - this.position.x, nextVector.y - this.position.y);
-        // Essa biblioteca é tão util que não tem a m3rd4 de uma sobrecarga de operador
-        // pra somar vetor. OBRIGADO LIBGDX
 
         this.position.x += this.velocity * deltaTime * Math.signum(diffToNextVector.x);
         this.position.y += this.velocity * deltaTime * Math.signum(diffToNextVector.y);
