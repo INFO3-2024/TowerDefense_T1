@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
-
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -135,6 +134,11 @@ public class Lobby extends Stage {
 		if(idDificulty != 0){
 			KeyGame = 2;
 			music.dispose();
+
+			this.music = AssetsControl.getSounds("musicGame");
+			this.music.setLooping(true);
+			this.music.setVolume(100);
+			this.music.play();
 		}
 
 		assetsManager.update(delta);
