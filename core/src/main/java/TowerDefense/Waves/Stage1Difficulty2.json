@@ -1,0 +1,46 @@
+{
+    "timeBetweenWaves": 15,
+    "maxWaves": 7,
+    "waves": [{
+        "pirates": 10,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 12,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 8,
+        "boss": 0
+    },
+    {
+        "pirates": 4,
+        "pirateCaptain": 2,
+        "zombiePirate": 6,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 5,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 6,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 1
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 3,
+        "zombiePirate": 0,
+        "boss": 2
+    }]
+}

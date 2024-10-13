@@ -1,0 +1,34 @@
+{
+    "timeBetweenWaves": 20,
+    "maxWaves": 5,
+    "waves": [{
+        "pirates": 8,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 10,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 6,
+        "boss": 0
+    },
+    {
+        "pirates": 4,
+        "pirateCaptain": 2,
+        "zombiePirate": 0,
+        "boss": 0
+    },
+    {
+        "pirates": 0,
+        "pirateCaptain": 0,
+        "zombiePirate": 0,
+        "boss": 1
+    }]
+}
