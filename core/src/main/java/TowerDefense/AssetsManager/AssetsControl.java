@@ -38,6 +38,7 @@ public class AssetsControl extends ApplicationAdapter {
         assetManager.load("Menus/UpgradeMenu.png", Texture.class);
         assetManager.load("Menus/BuildMenu.png", Texture.class);
 
+        assetManager.load("Sound/Goldenrod-City.mp3", Music.class);
         assetManager.load("Sound/NowWeAreFree(Gladiator).mp3", Music.class);
         assetManager.load("Lobby/Buttons.png", Texture.class);
         assetManager.load("Lobby/Bubbles.png", Texture.class);
@@ -67,6 +68,7 @@ public class AssetsControl extends ApplicationAdapter {
         textures.put("coinsBackground", assetManager.get("UI/CoinsBackground.png", Texture.class));
 
         sounds.put("musicLobby", assetManager.get("Sound/NowWeAreFree(Gladiator).mp3", Music.class));
+        sounds.put("musicGame", assetManager.get("Sound/Goldenrod-City.mp3", Music.class));
 
         stateTime = 0f;
     }
