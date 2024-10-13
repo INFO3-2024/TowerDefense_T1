@@ -89,7 +89,7 @@ public class ButtonsLobby {
 		HashMap<String, TextureRegion> buttons = new HashMap<String, TextureRegion>();
 
 		try {
-			FileReader file = new FileReader("../assets/Lobby/buttons_coords_size.txt");
+			FileReader file = new FileReader("./assets/Lobby/buttons_coords_size.txt");
 			BufferedReader in = new BufferedReader(file);
 			String line = in.readLine();
 			while (line != null) {
